@@ -1,0 +1,17 @@
+.contact-form {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.contact-message-group {
+  align-items: stretch;
+}
+
+.contact-message-group textarea {
+  resize: none;
+}
+
+.contact-message-group .input-group-text {
+  align-items: flex-start;
+  padding-top: 12px;
+}

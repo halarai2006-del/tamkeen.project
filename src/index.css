@@ -1,0 +1,15 @@
+:root {
+  --brand-red: #e63946;
+  --brand-red-hover: #d22e3a;
+}
+
+body {
+  margin: 0;
+  font-family:
+    'Poppins',
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+}

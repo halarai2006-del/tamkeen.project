@@ -1,0 +1,499 @@
+{
+  "login": {
+    "brand": "Borcelle",
+    "brandSubtitle": "Online Store",
+    "heroTitle": "Let's get started",
+    "heroText": "Where opportunities meet simplicity! Whether you're here to fill out your cart or to check irresistible offers.",
+    "welcome": "Welcome!",
+    "subtitle": "Please log in to continue",
+    "phonePlaceholder": "Add number",
+    "submit": "Log in"
+  },
+  "verify": {
+    "title": "Verification",
+    "subtitle": "Enter the code we send to :",
+    "resendLabel": "Didn't receive code ?",
+    "resendCode": "Resend Code",
+    "submit": "Verify",
+    "or": "OR",
+    "goBack": "Go back"
+  },
+  "profile": {
+    "title": "Fill your information",
+    "subtitle": "Enter your details",
+    "addPhoto": "Add photo",
+    "namePlaceholder": "Name",
+    "emailPlaceholder": "Email",
+    "phonePlaceholder": "Add number",
+    "submit": "Save"
+  },
+  "payment": {
+    "title": "Payment Method",
+    "subtitle": "Pick your payment method",
+    "cash": "Cash",
+    "syriatel": "Syriatel",
+    "mtn": "MTN",
+    "discountLabel": "Discount Code",
+    "check": "Check",
+    "searchPlaceholder": "Search",
+    "allCategory": "All category",
+    "search": "Search",
+    "profile": "Profile",
+    "message": "Message",
+    "orders": "Orders",
+    "cart": "My cart",
+    "itemName": "Smart Watches",
+    "itemDescription": "Special Backed Bread made in the oven",
+    "total": "Total",
+    "discount": "Discount",
+    "tax": "Tax",
+    "netTotal": "Net Total",
+    "confirm": "Confirm Payment",
+    "viewOrderedItems": "View ordered Items",
+    "successMessage": "you have successfully paid for your order",
+    "continue": "Back to store",
+    "close": "Close"
+  },
+  "account": {
+    "fullName": "Full Name",
+    "fullNamePlaceholder": "Your First Name",
+    "nickName": "Nick Name",
+    "nickNamePlaceholder": "Your Nick Name",
+    "settingsTitle": "Settings",
+    "wishlist": "Wishlist page",
+    "aboutUs": "About us page",
+    "contactUs": "Contact us page",
+    "faq": "FAQ page",
+    "termsAndCondition": "Terms and condition",
+    "privacyPolicy": "Privacy Policy page"
+  },
+  "terms": {
+    "title": "Terms and condition",
+    "back": "Back",
+    "sections": [
+      {
+        "heading": "Acceptance of Terms",
+        "body": "By using this application, you acknowledge that you have read, understood, and agree to fully comply with these terms. If you do not agree with these terms, please do not use the application. The application management reserves the right to modify these terms at any time, and you will be notified of updates when necessary."
+      },
+      {
+        "heading": "Account Creation and Use",
+        "body": "By using this application, you acknowledge that you have read, understood, and agree to fully comply with these terms. If you do not agree with these terms, please do not use the application. The application management reserves the right to modify these terms at any time, and you will be notified of updates when necessary."
+      },
+      {
+        "heading": "Acceptance of Terms",
+        "body": "By using this application, you acknowledge that you have read, understood, and agree to fully comply with these terms. If you do not agree with these terms, please do not use the application. The application management reserves the right to modify these terms at any time, and you will be notified of updates when necessary."
+      },
+      {
+        "heading": "Intellectual Property Rights",
+        "body": "By using this application, you acknowledge that you have read, understood, and agree to fully comply with these terms. If you do not agree with these terms, please do not use the application. The application management reserves the right to modify these terms at any time, and you will be notified of updates when necessary."
+      },
+      {
+        "heading": "Acceptance of Terms",
+        "body": "By using this application, you acknowledge that you have read, understood, and agree to fully comply with these terms. If you do not agree with these terms, please do not use the application. The application management reserves the right to modify these terms at any time, and you will be notified of updates when necessary."
+      }
+    ]
+  },
+  "contactUs": {
+    "title": "Contact us page",
+    "back": "Back",
+    "namePlaceholder": "Name...",
+    "emailPlaceholder": "Email",
+    "messagePlaceholder": "Write message",
+    "send": "Send"
+  },
+  "store": {
+    "menu": "All category",
+    "hotOffers": "Hot offers",
+    "giftBoxes": "Gift boxes",
+    "aboutUs": "About Us",
+    "help": "Help",
+    "categories": [
+      "Automobiles",
+      "Clothes and wear",
+      "Home Interiors",
+      "Computer and tech",
+      "Tools, equipments",
+      "Sports and outdoor",
+      "Animal and pets",
+      "Machinery tools",
+      "More category"
+    ],
+    "heroTitle": "Latest trending",
+    "heroHighlight": "Electronic items",
+    "learnMore": "Learn more",
+    "promo": {
+      "greeting": "Hi, user",
+      "greetingSubtitle": "let's get started",
+      "joinNow": "Join now",
+      "logIn": "Log in",
+      "discountBanner": "Get US $10 off with a new supplier",
+      "quoteBanner": "Send quotes with supplier preferences"
+    },
+    "dealsTitle": "Deals and offers",
+    "dealsSubtitle": "Hygiene equipments",
+    "days": "Days",
+    "hours": "Hour",
+    "minutes": "Min",
+    "seconds": "Sec",
+    "sourceNow": "Source now",
+    "homeOutdoor": "Home and outdoor",
+    "consumerElectronics": "Consumer electronics and gadgets",
+    "from": "From",
+    "items": {
+      "smartphones": "Smartphones",
+      "tablets": "Tablets",
+      "kitchenDishes": "Kitchen dishes",
+      "homePlants": "Home plants",
+      "gamingSet": "Gaming set",
+      "cameras": "Cameras",
+      "laptopsPc": "Laptops & PC",
+      "smartWatches": "Smart watches",
+      "headphones": "Headphones",
+      "electricKettle": "Electric kettle",
+      "softChairs": "Soft chairs",
+      "tableLamps": "Table lamps",
+      "airMattress": "Air mattress",
+      "kitchenMixer": "Kitchen mixer",
+      "coffeeMaker": "Coffee maker",
+      "homeAppliance": "Home appliance"
+    },
+    "inquiry": {
+      "title": "An easy way to send requests to all suppliers",
+      "subtitle": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.",
+      "formTitle": "Send quote to suppliers",
+      "itemPlaceholder": "What item you need?",
+      "detailsPlaceholder": "Type more details",
+      "quantity": "Quantity",
+      "pcs": "Pcs",
+      "sendInquiry": "Send inquiry",
+      "successMessage": "Your inquiry has been sent to suppliers"
+    },
+    "recommended": {
+      "title": "Recommended items",
+      "item1": "T-shirts with multiple colors, for men",
+      "item2": "Jeans shorts for men blue color",
+      "item3": "Brown winter coat medium size",
+      "item4": "Jeans bag for travel for men",
+      "item5": "Leather wallet",
+      "item6": "Canon camera black, 100x zoom",
+      "item7": "Headset for gaming with mic",
+      "item8": "Smartwatch silver color modern",
+      "item9": "Blue wallet for men leather material",
+      "item10": "Jeans bag for travel for men"
+    },
+    "extraServices": {
+      "title": "Our extra services",
+      "sourceHubs": "Source from Industry Hubs",
+      "customize": "Customize Your Products",
+      "shipping": "Fast, reliable shipping by ocean or air",
+      "monitoring": "Product monitoring and inspection"
+    },
+    "suppliersByRegion": {
+      "title": "Suppliers by region"
+    },
+    "newsletter": {
+      "title": "Subscribe on our newsletter",
+      "subtitle": "Get daily news on upcoming offers from many suppliers all over the world",
+      "emailPlaceholder": "Email",
+      "subscribe": "Subscribe"
+    },
+    "footer": {
+      "tagline": "Best information about the company goes here, but now lorem ipsum is",
+      "about": {
+        "title": "About",
+        "aboutUs": "About Us",
+        "findStore": "Find store",
+        "categories": "Categories",
+        "blogs": "Blogs"
+      },
+      "partnership": {
+        "title": "Partnership",
+        "aboutUs": "About Us",
+        "findStore": "Find store",
+        "categories": "Categories",
+        "blogs": "Blogs"
+      },
+      "information": {
+        "title": "Information",
+        "helpCenter": "Help Center",
+        "moneyRefund": "Money Refund",
+        "shipping": "Shipping",
+        "contactUs": "Contact us"
+      },
+      "forUsers": {
+        "title": "For users",
+        "login": "Login",
+        "register": "Register",
+        "settings": "Settings",
+        "myOrders": "My Orders"
+      },
+      "getApp": {
+        "title": "Get app",
+        "downloadOn": "Download on the",
+        "getItOn": "GET IT ON"
+      },
+      "copyright": "© 2023 Ecommerce.",
+      "language": "English"
+    },
+    "regions": {
+      "uae": "Arabic Emirates",
+      "australia": "Australia",
+      "usa": "United States",
+      "russia": "Russia",
+      "italy": "Italy",
+      "denmark": "Denmark",
+      "france": "France",
+      "china": "China",
+      "uk": "Great Britain"
+    }
+  },
+  "category": {
+    "breadcrumb": ["Home", "Electronics", "Mobile accessory"],
+    "filters": {
+      "title": "Filters",
+      "category": {
+        "title": "Category",
+        "items": ["Mobile accessory", "Electronics", "Smartphones", "Modern tech"],
+        "seeAll": "See all"
+      },
+      "brands": {
+        "title": "Brands",
+        "items": ["Samsung", "Apple", "Huawei", "Poco", "Lenovo"],
+        "seeAll": "See all"
+      },
+      "features": {
+        "title": "Features",
+        "items": ["Metallic", "Plastic cover", "8GB Ram", "Super power", "Large Memory"],
+        "seeAll": "See all"
+      },
+      "priceRange": {
+        "title": "Price range",
+        "min": "Min",
+        "max": "Max",
+        "apply": "Apply"
+      },
+      "condition": {
+        "title": "Condition",
+        "items": ["Any", "Refurbished", "Brand new", "Old items"]
+      },
+      "ratings": {
+        "title": "Ratings",
+        "andUp": "& up",
+        "chipUnit": "star"
+      },
+      "manufacturer": {
+        "title": "Manufacturer",
+        "items": ["Foxconn", "Pegatron", "Wistron", "BYD Electronics", "Flex"],
+        "seeAll": "See all"
+      }
+    },
+    "clearAllFilters": "Clear all filter",
+    "itemsCount": "{{count}} items in {{category}}",
+    "verifiedOnly": "Verified only",
+    "sortOptions": {
+      "featured": "Featured",
+      "priceLowHigh": "Price: Low to High",
+      "priceHighLow": "Price: High to Low",
+      "newest": "Newest",
+      "topRated": "Top rated"
+    },
+    "freeShipping": "Free Shipping",
+    "orders": "{{count}} orders",
+    "viewDetails": "View details",
+    "show": "Show",
+    "products": [
+      {
+        "title": "Canon EOS 2000 DSLR Camera, Black 10x Zoom",
+        "description": "Capture crisp photos and videos with an 18MP sensor and reliable autofocus."
+      },
+      {
+        "title": "Samsung Galaxy Tab S8, Space Grey",
+        "description": "A powerful tablet with a vivid display, perfect for work and entertainment on the go."
+      },
+      {
+        "title": "Xiaomi Mi 9 Smartphone, Black 128GB",
+        "description": "Fast performance and a triple camera system in a sleek glass design."
+      },
+      {
+        "title": "MacBook Pro 16-inch Laptop, Space Grey",
+        "description": "A high performance laptop built for creative professionals and multitaskers."
+      },
+      {
+        "title": "Apple Watch Series 7, Silver",
+        "description": "Track your fitness and stay connected right from your wrist."
+      },
+      {
+        "title": "Wireless Gaming Headset, White",
+        "description": "Immersive sound with a noise-cancelling mic for long gaming sessions."
+      },
+      {
+        "title": "iPhone 13 Pro Smartphone, Product Red",
+        "description": "Vivid Super Retina XDR display with a powerful A15 Bionic chip for all-day performance."
+      },
+      {
+        "title": "Nikon D3500 DSLR Camera, Black 18-55mm Lens",
+        "description": "Beginner-friendly DSLR with guided controls and sharp image quality in any light."
+      },
+      {
+        "title": "Dell XPS 15 Laptop, Platinum Silver",
+        "description": "Slim and powerful laptop with a stunning display, built for work and creativity."
+      }
+    ]
+  },
+  "productDetail": {
+    "breadcrumb": ["Home", "Clothings", "Men's wear", "Summer clothing"],
+    "inStock": "In stock",
+    "title": "Mens Long Sleeve T-shirt Cotton Base Layer Slim Muscle",
+    "rating": "9.3",
+    "reviews": "{{count}} reviews",
+    "sold": "{{count}} sold",
+    "priceTiers": [
+      { "price": "$98.00", "range": "50-100 pcs" },
+      { "price": "$90.00", "range": "100-700 pcs" },
+      { "price": "$78.00", "range": "700+ pcs" }
+    ],
+    "attributes": [
+      { "label": "Price", "value": "Negotiable" },
+      { "label": "Type", "value": "Classic shoes" },
+      { "label": "Material", "value": "Plastic material" },
+      { "label": "Design", "value": "Modern nice" },
+      { "label": "Customization", "value": "Customized logo and design custom packages" },
+      { "label": "Protection", "value": "Refund Policy" },
+      { "label": "Warranty", "value": "2 years full warranty" }
+    ],
+    "supplier": {
+      "label": "Supplier",
+      "name": "Guanjoi Trading LLC",
+      "location": "Germany, Berlin",
+      "verified": "Verified Seller",
+      "shipping": "Worldwide shipping",
+      "sendInquiry": "Send inquiry",
+      "profile": "Seller's profile",
+      "saveForLater": "Save for later"
+    },
+    "tabs": {
+      "description": "Description",
+      "reviews": "Reviews",
+      "shipping": "Shipping",
+      "aboutSeller": "About seller"
+    },
+    "readMore": "Read more",
+    "readLess": "Read less",
+    "zoomImage": "Zoom image",
+    "closeZoom": "Close zoomed image",
+    "descriptionParagraphs": [
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,",
+      "Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+    ],
+    "specs": [
+      { "label": "Model", "value": "#8786867" },
+      { "label": "Style", "value": "Classic style" },
+      { "label": "Certificate", "value": "ISO-898921212" },
+      { "label": "Size", "value": "34mm x 450mm x 19mm" },
+      { "label": "Memory", "value": "36GB RAM" }
+    ],
+    "features": [
+      "Some great feature name here",
+      "Lorem ipsum dolor sit amet, consectetur",
+      "Duis aute irure dolor in reprehenderit",
+      "Some great feature name here"
+    ],
+    "youMayLike": {
+      "title": "You may like",
+      "items": [
+        { "title": "Men Blazers Sets Elegant Formal", "priceRange": "$7.00 - $99.50" },
+        { "title": "Men Shirt Sleeve Polo Contrast", "priceRange": "$7.00 - $99.50" },
+        { "title": "Apple Watch Series Space Gray", "priceRange": "$7.00 - $99.50" },
+        { "title": "Basketball Crew Socks Long Stuff", "priceRange": "$7.00 - $99.50" },
+        { "title": "New Summer Men's Casual T-Shirts", "priceRange": "$7.00 - $99.50" }
+      ]
+    },
+    "relatedProducts": {
+      "title": "Related products",
+      "name": "Xiaomi Redmi 8 Original",
+      "priceRange": "$32.00 - $40.00"
+    },
+    "discountBanner": {
+      "title": "Super discount on more than 100 USD",
+      "subtitle": "Have you ever finally just write dummy info",
+      "cta": "Shop now"
+    }
+  },
+  "cartPage": {
+    "title": "My cart ({{count}})",
+    "mobileTitle": "Shopping cart",
+    "items": [
+      {
+        "title": "T-shirts with multiple colors, for men and lady",
+        "meta": "Size: medium, Color: blue, Material: Plastic",
+        "seller": "Seller: Artel Market"
+      },
+      {
+        "title": "T-shirts with multiple colors, for men and lady",
+        "meta": "Size: medium, Color: blue, Material: Plastic",
+        "seller": "Seller: Best factory LLC"
+      },
+      {
+        "title": "T-shirts with multiple colors, for men and lady",
+        "meta": "Size: medium, Color: blue, Material: Plastic",
+        "seller": "Seller: Artel Market"
+      }
+    ],
+    "remove": "Remove",
+    "saveForLater": "Save for later",
+    "qty": "Qty: {{count}}",
+    "backToShop": "Back to shop",
+    "removeAll": "Remove all",
+    "perks": [
+      { "title": "Secure payment", "subtitle": "Have you ever finally just write dummy info" },
+      { "title": "Customer support", "subtitle": "Have you ever finally just write dummy info" },
+      { "title": "Free delivery", "subtitle": "Have you ever finally just write dummy info" }
+    ],
+    "summary": {
+      "couponTitle": "Have you got a coupon?",
+      "couponPlaceholder": "Add coupon",
+      "apply": "Apply",
+      "subtotal": "Subtotal",
+      "discount": "Discount",
+      "tax": "Tax",
+      "total": "Total",
+      "checkout": "Checkout"
+    },
+    "savedForLater": {
+      "title": "Saved for later",
+      "name": "GoPro HERO6 4K Action Camera - Black",
+      "price": "$99.50",
+      "moveToCart": "Move to cart"
+    }
+  },
+  "cart": {
+    "title": "Your Shopping Bag",
+    "itemDescription": "Special GoPro cameras",
+    "itemBread": "Backed Bread",
+    "itemWipe": "Greeze Face Wipe",
+    "itemGoPro": "GoPro Cameras",
+    "subtotal": "SubTotal :",
+    "checkout": "Checkout",
+    "close": "Close"
+  },
+  "common": {
+    "language": "العربية",
+    "toggleTheme": "Toggle theme",
+    "menu": "Menu",
+    "back": "Back",
+    "close": "Close"
+  },
+  "mobileMenu": {
+    "signInRegister": "Sign in | Register",
+    "home": "Home",
+    "categories": "Categories",
+    "favorites": "Favorites",
+    "myOrders": "My orders",
+    "languageCurrency": "English | USD",
+    "contactUs": "Contact us",
+    "about": "About",
+    "userAgreement": "User agreement",
+    "partnership": "Partnership",
+    "privacyPolicy": "Privacy policy"
+  }
+}

@@ -1,0 +1,158 @@
+.login-page {
+  min-height: 100svh;
+  width: 100%;
+  position: relative;
+  background-color: var(--bs-body-bg);
+}
+
+.login-toolbar {
+  position: absolute;
+  top: 16px;
+  inset-inline-end: 16px;
+  z-index: 10;
+  display: flex;
+  gap: 8px;
+}
+
+.login-toolbar-btn {
+  backdrop-filter: blur(4px);
+}
+
+.login-hero {
+  flex: 1 1 58%;
+  min-height: 100svh;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 32px;
+}
+
+.login-hero-content {
+  max-width: 460px;
+  text-align: center;
+  color: #fff;
+}
+
+.login-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 32px;
+}
+
+.brand-icon {
+  font-size: 2rem;
+}
+
+.brand-name {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.brand-subtitle {
+  display: block;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.hero-title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.hero-text {
+  font-size: 1rem;
+  line-height: 1.6;
+  opacity: 0.92;
+}
+
+.login-form-panel {
+  flex: 1 1 42%;
+  background-color: var(--bs-secondary-bg);
+  padding: 32px 24px;
+}
+
+.login-form {
+  width: 100%;
+  max-width: 360px;
+}
+
+.welcome-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--bs-body-color);
+}
+
+.welcome-subtitle {
+  color: var(--bs-secondary-color);
+  margin-bottom: 24px;
+}
+
+.login-input-group {
+  margin-bottom: 20px;
+}
+
+.login-submit-btn {
+  background-color: var(--brand-red);
+  border-color: var(--brand-red);
+  color: #fff;
+  font-weight: 600;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+.login-submit-btn:hover,
+.login-submit-btn:focus {
+  background-color: var(--brand-red-hover);
+  border-color: var(--brand-red-hover);
+  color: #fff;
+}
+
+@media (max-width: 900px) {
+  .login-page {
+    flex-direction: column !important;
+    min-height: auto;
+  }
+
+  .login-hero {
+    flex: 0 0 auto;
+    min-height: 280px;
+    padding: 56px 20px 32px;
+  }
+
+  .login-form-panel {
+    flex: 1 1 auto;
+    padding: 28px 20px 40px;
+  }
+
+  .hero-title {
+    font-size: 1.6rem;
+  }
+
+  .hero-text {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-hero {
+    min-height: 220px;
+  }
+
+  .hero-title {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+  }
+
+  .login-brand {
+    margin-bottom: 20px;
+  }
+}
