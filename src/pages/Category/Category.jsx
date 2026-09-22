@@ -1,17 +1,21 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import StoreNavbar from '../../components/StoreNavbar/StoreNavbar'
-import cameraImage from '../../assets/images/6.png'
-import tabletImage from '../../assets/images/image 32.png'
-import phoneImage from '../../assets/images/3.png'
-import laptopImage from '../../assets/images/7.png'
-import smartwatchImage from '../../assets/images/smartwatch-product.png'
-import headphonesImage from '../../assets/images/image 86.png'
-import redPhoneImage from '../../assets/images/image 33.png'
+import { getCategories } from '../../api/categories'
+import { getProducts } from '../../api/products'
+import { PLACEHOLDER_IMAGE } from '../../utils/placeholderImage'
 import borcelleLogo from '../../assets/images/borcelle-logo.png'
 import flagUk from '../../assets/images/icon.png'
 import '../Store/Store.css'
 import './Category.css'
+
+const SORT_TO_API = {
+  featured: {},
+  priceLowHigh: { orderBy: 'price', order: 'asc' },
+  priceHighLow: { orderBy: 'price', order: 'desc' },
+  newest: { orderBy: 'created_at', order: 'desc' },
+  topRated: { orderBy: 'most_purchased', order: 'desc' },
+}
 
 const SOCIAL_LINKS = [
   { icon: 'bi-facebook', label: 'Facebook' },
@@ -58,18 +62,6 @@ const FOOTER_COLUMNS = [
       'store.footer.forUsers.myOrders',
     ],
   },
-]
-
-const PRODUCTS = [
-  { img: cameraImage, price: 998, oldPrice: 1128, rating: 4.7, orders: 154 },
-  { img: tabletImage, price: 998, oldPrice: null, rating: 4.6, orders: 154 },
-  { img: phoneImage, price: 998, oldPrice: null, rating: 4.5, orders: 154 },
-  { img: laptopImage, price: 998, oldPrice: null, rating: 4.8, orders: 154 },
-  { img: smartwatchImage, price: 998, oldPrice: 1128, rating: 4.6, orders: 153 },
-  { img: headphonesImage, price: 998, oldPrice: null, rating: 4.4, orders: 154 },
-  { img: redPhoneImage, price: 998, oldPrice: 1128, rating: 4.7, orders: 152 },
-  { img: cameraImage, price: 998, oldPrice: null, rating: 4.5, orders: 140 },
-  { img: laptopImage, price: 998, oldPrice: 1128, rating: 4.6, orders: 160 },
 ]
 
 const RATING_TIERS = [5, 4, 3, 2]
@@ -119,7 +111,11 @@ function FilterSection({ title, seeAllLabel, children }) {
 
 function Category({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick, onCartClick, onProductClick }) {
   const { t } = useTranslation()
-  const [activeCategoryIndex, setActiveCategoryIndex] = useState(0)
+  const [apiCategories, setApiCategories] = useState([])
+  const [activeCategoryId, setActiveCategoryId] = useState(null)
+  const [products, setProducts] = useState([])
+  const [productsLoading, setProductsLoading] = useState(true)
+  const [productsError, setProductsError] = useState('')
   const [selectedBrands, setSelectedBrands] = useState([])
   const [selectedFeatures, setSelectedFeatures] = useState([])
   const [condition, setCondition] = useState(0)
@@ -138,12 +134,44 @@ function Category({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick,
   const [filtersOpen, setFiltersOpen] = useState(false)
 
   const breadcrumb = t('category.breadcrumb', { returnObjects: true })
-  const categories = t('category.filters.category.items', { returnObjects: true })
   const brands = t('category.filters.brands.items', { returnObjects: true })
   const features = t('category.filters.features.items', { returnObjects: true })
   const conditions = t('category.filters.condition.items', { returnObjects: true })
   const manufacturers = t('category.filters.manufacturer.items', { returnObjects: true })
-  const products = t('category.products', { returnObjects: true })
+
+  useEffect(() => {
+    getCategories()
+      .then(setApiCategories)
+      .catch(() => {})
+  }, [])
+
+  useEffect(() => {
+    let cancelled = false
+    setProductsLoading(true)
+    setProductsError('')
+    getProducts({
+      categoryId: activeCategoryId,
+      priceFrom: minPrice,
+      priceTo: maxPrice,
+      ...SORT_TO_API[sortBy],
+    })
+      .then((result) => {
+        if (!cancelled) setProducts(result)
+      })
+      .catch(() => {
+        if (!cancelled) setProductsError(t('store.loadError'))
+      })
+      .finally(() => {
+        if (!cancelled) setProductsLoading(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [activeCategoryId, minPrice, maxPrice, sortBy, t])
+
+  const activeCategoryName =
+    apiCategories.find((category) => category.id === activeCategoryId)?.name ??
+    t('category.allCategories')
 
   const toggleValue = (list, setList, value) => {
     setList(list.includes(value) ? list.filter((item) => item !== value) : [...list, value])
@@ -196,7 +224,7 @@ function Category({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick,
         onOrdersClick={onOrdersClick}
         onCartClick={onCartClick}
         onBack={onBrandClick}
-        mobileTitle={categories[activeCategoryIndex]}
+        mobileTitle={activeCategoryName}
       />
 
       <nav className="store-subnav">
@@ -246,14 +274,23 @@ function Category({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick,
 
           <FilterSection title={t('category.filters.category.title')} seeAllLabel={t('category.filters.category.seeAll')}>
             <ul className="category-list-plain">
-              {categories.map((category, index) => (
-                <li key={category}>
+              <li>
+                <button
+                  type="button"
+                  className={`category-filter-list-item ${activeCategoryId === null ? 'is-active' : ''}`}
+                  onClick={() => setActiveCategoryId(null)}
+                >
+                  {t('category.allCategories')}
+                </button>
+              </li>
+              {apiCategories.map((category) => (
+                <li key={category.id}>
                   <button
                     type="button"
-                    className={`category-filter-list-item ${index === activeCategoryIndex ? 'is-active' : ''}`}
-                    onClick={() => setActiveCategoryIndex(index)}
+                    className={`category-filter-list-item ${activeCategoryId === category.id ? 'is-active' : ''}`}
+                    onClick={() => setActiveCategoryId(category.id)}
                   >
-                    {category}
+                    {category.name}
                   </button>
                 </li>
               ))}
@@ -359,7 +396,7 @@ function Category({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick,
         <main className="category-main">
           <div className="category-list-header">
             <span className="category-list-count">
-              {t('category.itemsCount', { count: '12,911', category: categories[activeCategoryIndex] })}
+              {t('category.itemsCount', { count: products.length, category: activeCategoryName })}
             </span>
 
             <div className="category-list-controls">
@@ -430,46 +467,45 @@ function Category({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick,
             </div>
           )}
 
+          {productsLoading && <p className="store-products-status">{t('store.loading')}</p>}
+          {!productsLoading && productsError && (
+            <p className="store-products-status store-products-error">{productsError}</p>
+          )}
+
           <div className={`category-products is-${viewMode}`}>
-            {products.map((product, index) => {
-              const data = PRODUCTS[index]
-              const isSaved = savedItems.includes(index)
-              const isSelected = selectedProductIndex === index
+            {!productsLoading && products.map((product) => {
+              const isSaved = savedItems.includes(product.id)
+              const isSelected = selectedProductIndex === product.id
               return (
                 <article
                   className={`category-product-row ${isSelected ? 'is-selected' : ''}`}
-                  key={product.title}
-                  onClick={() => setSelectedProductIndex((current) => (current === index ? null : index))}
+                  key={product.id}
+                  onClick={() => setSelectedProductIndex((current) => (current === product.id ? null : product.id))}
                 >
                   <button
                     type="button"
                     className={`category-product-wishlist ${isSaved ? 'is-saved' : ''}`}
-                    aria-label={product.title}
+                    aria-label={product.name}
                     onClick={(event) => {
                       event.stopPropagation()
-                      toggleValue(savedItems, setSavedItems, index)
+                      toggleValue(savedItems, setSavedItems, product.id)
                     }}
                   >
                     <i className={`bi ${isSaved ? 'bi-heart-fill' : 'bi-heart'}`} aria-hidden="true" />
                   </button>
 
-                  <img src={data.img} alt={product.title} className="category-product-thumb" />
+                  <img src={product.image || PLACEHOLDER_IMAGE} alt={product.name} className="category-product-thumb" />
 
                   <div className="category-product-info">
-                    <h3 className="category-product-title">{product.title}</h3>
+                    <h3 className="category-product-title">{product.name}</h3>
 
                     <div className="category-product-price-row">
-                      <span className="category-product-price">${data.price.toFixed(2)}</span>
-                      {data.oldPrice && (
-                        <span className="category-product-oldprice">${data.oldPrice.toFixed(2)}</span>
-                      )}
+                      <span className="category-product-price">${Number(product.price).toFixed(2)}</span>
                     </div>
 
-                    <div className="category-product-meta">
-                      <RatingStars rating={data.rating} />
-                      <span>{t('category.orders', { count: data.orders })}</span>
-                      <span className="category-product-shipping">{t('category.freeShipping')}</span>
-                    </div>
+                    {product.category?.name && (
+                      <span className="category-product-shipping">{product.category.name}</span>
+                    )}
 
                     <p className="category-product-desc">{product.description}</p>
 
@@ -478,7 +514,7 @@ function Category({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick,
                       className="category-product-view"
                       onClick={(event) => {
                         event.stopPropagation()
-                        onProductClick?.()
+                        onProductClick?.(product.id)
                       }}
                     >
                       {t('category.viewDetails')}

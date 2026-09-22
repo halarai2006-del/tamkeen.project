@@ -1,9 +1,12 @@
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '../../context/ThemeContext'
+import { updateProfile } from '../../api/profile'
 import storefrontImage from '../../assets/images/login-storefront.png'
 import '../Login/Login.css'
 import './Profile.css'
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 function Profile({ onSubmit, onBack }) {
   const { t, i18n } = useTranslation()
@@ -12,6 +15,9 @@ function Profile({ onSubmit, onBack }) {
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [photoUrl, setPhotoUrl] = useState(null)
+  const [photoFile, setPhotoFile] = useState(null)
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
   const fileInputRef = useRef(null)
 
   const otherLanguage = i18n.language === 'ar' ? 'en' : 'ar'
@@ -19,12 +25,38 @@ function Profile({ onSubmit, onBack }) {
   const handlePhotoChange = (event) => {
     const file = event.target.files?.[0]
     if (!file) return
+    setPhotoFile(file)
     setPhotoUrl(URL.createObjectURL(file))
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    onSubmit?.({ name, email, phone })
+    if (saving) return
+
+    const trimmedName = name.trim()
+    const trimmedEmail = email.trim()
+    const trimmedPhone = phone.trim()
+
+    if (!trimmedName || !trimmedEmail || !trimmedPhone) {
+      setError(t('profile.requiredFields'))
+      return
+    }
+    if (!EMAIL_PATTERN.test(trimmedEmail)) {
+      setError(t('profile.invalidEmail'))
+      return
+    }
+
+    setError('')
+    setSaving(true)
+    try {
+      await updateProfile({ name: trimmedName, email: trimmedEmail, phone: trimmedPhone, imageFile: photoFile })
+      onSubmit?.({ name: trimmedName, email: trimmedEmail, phone: trimmedPhone })
+    } catch (err) {
+      console.error(err)
+      setError(t('profile.saveError'))
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -114,6 +146,7 @@ function Profile({ onSubmit, onBack }) {
               aria-label={t('profile.namePlaceholder')}
               value={name}
               onChange={(event) => setName(event.target.value)}
+              required
             />
             <span className="input-group-text">
               <i className="bi bi-person" aria-hidden="true" />
@@ -128,6 +161,7 @@ function Profile({ onSubmit, onBack }) {
               aria-label={t('profile.emailPlaceholder')}
               value={email}
               onChange={(event) => setEmail(event.target.value)}
+              required
             />
             <span className="input-group-text">
               <i className="bi bi-envelope" aria-hidden="true" />
@@ -142,14 +176,17 @@ function Profile({ onSubmit, onBack }) {
               aria-label={t('profile.phonePlaceholder')}
               value={phone}
               onChange={(event) => setPhone(event.target.value)}
+              required
             />
             <span className="input-group-text">
               <i className="bi bi-telephone" aria-hidden="true" />
             </span>
           </div>
 
-          <button type="submit" className="btn login-submit-btn w-100">
-            {t('profile.submit')}
+          {error && <p className="login-error">{error}</p>}
+
+          <button type="submit" className="btn login-submit-btn w-100" disabled={saving}>
+            {saving ? t('profile.saving') : t('profile.submit')}
           </button>
         </form>
       </div>

@@ -1,12 +1,25 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '../../context/ThemeContext'
+import { useAuth } from '../../context/AuthContext'
+import { verify } from '../../api/auth'
+import { addToCart } from '../../api/cart'
+import { getLocalCart, clearLocalCart } from '../../cart/localCart'
+import { isDemoOtp } from '../../utils/demoMode'
 import storefrontImage from '../../assets/images/login-storefront.png'
 import '../Login/Login.css'
 import './Verify.css'
 
-const CODE_LENGTH = 4
+const CODE_LENGTH = 5
 const RESEND_SECONDS = 55
+
+async function syncLocalCartToServer() {
+  const items = getLocalCart()
+  for (const item of items) {
+    await addToCart(item.productId, item.quantity)
+  }
+  clearLocalCart()
+}
 
 function formatTime(seconds) {
   const m = Math.floor(seconds / 60)
@@ -16,11 +29,15 @@ function formatTime(seconds) {
   return `${m}:${s}`
 }
 
-function Verify({ phone, onBack, onSubmit }) {
+function Verify({ phone, onBack, onResend, onSubmit }) {
   const { t, i18n } = useTranslation()
   const { theme, toggleTheme } = useTheme()
+  const { refreshUser } = useAuth()
   const [code, setCode] = useState(Array(CODE_LENGTH).fill(''))
   const [secondsLeft, setSecondsLeft] = useState(RESEND_SECONDS)
+  const [loading, setLoading] = useState(false)
+  const [resending, setResending] = useState(false)
+  const [error, setError] = useState('')
   const inputRefs = useRef([])
 
   const otherLanguage = i18n.language === 'ar' ? 'en' : 'ar'
@@ -51,16 +68,64 @@ function Verify({ phone, onBack, onSubmit }) {
     }
   }
 
-  const handleResend = () => {
-    if (secondsLeft > 0) return
-    setCode(Array(CODE_LENGTH).fill(''))
-    setSecondsLeft(RESEND_SECONDS)
-    inputRefs.current[0]?.focus()
+  const handleResend = async () => {
+    if (secondsLeft > 0 || resending) return
+    setError('')
+    setResending(true)
+    try {
+      await onResend?.()
+      setCode(Array(CODE_LENGTH).fill(''))
+      setSecondsLeft(RESEND_SECONDS)
+      inputRefs.current[0]?.focus()
+    } catch (err) {
+      console.error(err)
+      setError(t('login.sendError'))
+    } finally {
+      setResending(false)
+    }
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    onSubmit?.(code.join(''))
+    if (loading) return
+    const otp = code.join('')
+
+    // The phone number lives in the previous screen's local state, which is
+    // lost on a page refresh or a direct visit to this URL. A real backend
+    // verification can't succeed without it — but the fixed demo code doesn't
+    // need a real phone, so only block the real-backend path here.
+    if (!phone && !isDemoOtp(otp)) {
+      setError(t('verify.missingSession'))
+      return
+    }
+
+    setError('')
+    setLoading(true)
+    try {
+      await verify(phone, otp)
+    } catch (err) {
+      console.error(err)
+      setError(t('verify.invalidCode'))
+      setLoading(false)
+      return
+    }
+
+    // The code was accepted at this point, so anything below is best-effort:
+    // its failure must not be reported back to the user as an invalid code.
+    try {
+      // Load the now-authenticated profile so the rest of the app (cart,
+      // address, payment) immediately treats this session as logged in.
+      await refreshUser()
+    } catch (err) {
+      console.error(err)
+    }
+    try {
+      await syncLocalCartToServer()
+    } catch (err) {
+      console.error(err)
+    }
+    setLoading(false)
+    onSubmit?.()
   }
 
   return (
@@ -133,14 +198,16 @@ function Verify({ phone, onBack, onSubmit }) {
           <button
             type="button"
             className="verify-resend-btn"
-            disabled={secondsLeft > 0}
+            disabled={secondsLeft > 0 || resending}
             onClick={handleResend}
           >
-            {t('verify.resendCode')}
+            {resending ? t('verify.resending') : t('verify.resendCode')}
           </button>
 
-          <button type="submit" className="btn login-submit-btn w-100">
-            {t('verify.submit')}
+          {error && <p className="login-error">{error}</p>}
+
+          <button type="submit" className="btn login-submit-btn w-100" disabled={loading}>
+            {loading ? t('verify.verifying') : t('verify.submit')}
           </button>
 
           <div className="verify-divider">

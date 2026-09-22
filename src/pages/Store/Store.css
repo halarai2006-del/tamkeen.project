@@ -1,6 +1,15 @@
-.store-page {
+﻿.store-page {
   min-height: 100svh;
   background-color: var(--bs-body-bg);
+}
+
+.store-products-status {
+  padding: 16px 0;
+  color: var(--bs-secondary-color);
+}
+
+.store-products-error {
+  color: #dc3545;
 }
 
 .store-subnav {

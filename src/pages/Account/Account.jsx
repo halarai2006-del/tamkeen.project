@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import StoreNavbar from '../../components/StoreNavbar/StoreNavbar'
+import { getProfile, updateProfile } from '../../api/profile'
 import avatarImage from '../../assets/images/avatar-alexa.png'
 import './Account.css'
 
@@ -17,6 +18,34 @@ function Account({ onBrandClick, onCartClick, onBack, onTermsClick, onContactUsC
   const { t } = useTranslation()
   const [fullName, setFullName] = useState('')
   const [nickName, setNickName] = useState('')
+  const [email, setEmail] = useState('')
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
+  const [saved, setSaved] = useState(false)
+
+  useEffect(() => {
+    getProfile()
+      .then((profile) => {
+        if (!profile) return
+        setFullName(profile.name ?? '')
+        setEmail(profile.email ?? '')
+      })
+      .catch(() => {})
+  }, [])
+
+  const handleSave = async () => {
+    setSaving(true)
+    setError('')
+    setSaved(false)
+    try {
+      await updateProfile({ name: fullName })
+      setSaved(true)
+    } catch {
+      setError(t('account.saveError'))
+    } finally {
+      setSaving(false)
+    }
+  }
 
   const settingsHandlers = {
     termsAndCondition: onTermsClick,
@@ -36,10 +65,10 @@ function Account({ onBrandClick, onCartClick, onBack, onTermsClick, onContactUsC
 
       <div className="account-content">
         <div className="account-identity">
-          <img src={avatarImage} alt="Alexa Rawles" className="account-avatar" />
+          <img src={avatarImage} alt={fullName || t('account.fullName')} className="account-avatar" />
           <div>
-            <span className="account-name">Alexa Rawles</span>
-            <span className="account-email">alexarawles@gmail.com</span>
+            <span className="account-name">{fullName || t('account.fullName')}</span>
+            {email && <span className="account-email">{email}</span>}
           </div>
         </div>
 
@@ -66,6 +95,18 @@ function Account({ onBrandClick, onCartClick, onBack, onTermsClick, onContactUsC
               onChange={(event) => setNickName(event.target.value)}
             />
           </div>
+
+          {error && <p className="login-error">{error}</p>}
+          {saved && <p className="account-saved-message">{t('account.saved')}</p>}
+
+          <button
+            type="button"
+            className="btn login-submit-btn"
+            onClick={handleSave}
+            disabled={saving}
+          >
+            {saving ? t('account.saving') : t('account.save')}
+          </button>
         </div>
 
         <h3 className="account-settings-title">{t('account.settingsTitle')}</h3>

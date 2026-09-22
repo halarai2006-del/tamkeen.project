@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '../../context/ThemeContext'
+import { login } from '../../api/auth'
 import storefrontImage from '../../assets/images/login-storefront.png'
 import './Login.css'
 
@@ -8,12 +9,24 @@ function Login({ onSubmit, onClose }) {
   const { t, i18n } = useTranslation()
   const { theme, toggleTheme } = useTheme()
   const [phone, setPhone] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const otherLanguage = i18n.language === 'ar' ? 'en' : 'ar'
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    onSubmit?.(phone)
+    if (!phone.trim() || loading) return
+    setLoading(true)
+    try {
+      await login(phone.trim())
+    } catch (err) {
+      console.error(err)
+      // Don't block navigation here: the fixed demo code on the next screen
+      // can still complete sign-in even when this phone isn't backend-registered.
+    } finally {
+      setLoading(false)
+    }
+    onSubmit?.(phone.trim())
   }
 
   return (
@@ -82,8 +95,8 @@ function Login({ onSubmit, onClose }) {
             </span>
           </div>
 
-          <button type="submit" className="btn login-submit-btn w-100">
-            {t('login.submit')}
+          <button type="submit" className="btn login-submit-btn w-100" disabled={loading}>
+            {loading ? t('login.sending') : t('login.submit')}
           </button>
         </form>
       </div>

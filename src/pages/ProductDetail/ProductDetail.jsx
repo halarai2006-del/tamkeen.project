@@ -1,15 +1,12 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import StoreNavbar from '../../components/StoreNavbar/StoreNavbar'
+import { getProduct } from '../../api/products'
+import { addItem } from '../../cart/cartService'
+import { useAuth } from '../../context/AuthContext'
 import borcelleLogo from '../../assets/images/borcelle-logo.png'
 import flagUk from '../../assets/images/icon.png'
-import successBadge from '../../assets/images/success-badge.png'
-import mainShirt from '../../assets/images/image 34.png'
-import thumbShirtWhite from '../../assets/images/image 35.png'
-import thumbShirt3 from '../../assets/images/image 38.png'
-import thumbShirt4 from '../../assets/images/image 39.png'
-import thumbShirt5 from '../../assets/images/image 40.png'
-import thumbShirt6 from '../../assets/images/image 37.png'
 import blazerImage from '../../assets/images/image 30.png'
 import poloContrastImage from '../../assets/images/Group 558.png'
 import smartwatchImage from '../../assets/images/smartwatch-product.png'
@@ -22,9 +19,7 @@ import organizerImage from '../../assets/images/rasm.png'
 import '../Store/Store.css'
 import './ProductDetail.css'
 
-const GALLERY_IMAGES = [mainShirt, thumbShirtWhite, thumbShirt3, thumbShirt4, thumbShirt5, thumbShirt6]
-
-const YOU_MAY_LIKE_IMAGES = [blazerImage, poloContrastImage, smartwatchImage, backpackImage, mainShirt]
+const YOU_MAY_LIKE_IMAGES = [blazerImage, poloContrastImage, smartwatchImage, backpackImage, denimShortsImage]
 
 const RELATED_PRODUCT_IMAGES = [walletImage, smartwatchImage, headphonesImage, denimShortsImage, kettleImage, organizerImage]
 
@@ -75,33 +70,22 @@ const FOOTER_COLUMNS = [
   },
 ]
 
-function RatingStars({ rating }) {
-  const stars = []
-  for (let i = 1; i <= 5; i += 1) {
-    let icon = 'bi-star'
-    if (rating >= i) icon = 'bi-star-fill'
-    else if (rating >= i - 0.5) icon = 'bi-star-half'
-    stars.push(<i key={i} className={`bi ${icon}`} aria-hidden="true" />)
-  }
-  return <span className="pd-rating-stars">{stars}</span>
-}
-
 function ProductDetail({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick, onCartClick }) {
   const { t } = useTranslation()
+  const { id } = useParams()
+  const { user } = useAuth()
+  const [product, setProduct] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
   const [activeImage, setActiveImage] = useState(0)
   const [activeTab, setActiveTab] = useState('description')
   const [saved, setSaved] = useState(false)
-  const [descExpanded, setDescExpanded] = useState(false)
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [selectedLikeIndex, setSelectedLikeIndex] = useState(null)
   const [selectedRelatedIndex, setSelectedRelatedIndex] = useState(null)
+  const [addingToCart, setAddingToCart] = useState(false)
+  const [addedToCart, setAddedToCart] = useState(false)
 
-  const breadcrumb = t('productDetail.breadcrumb', { returnObjects: true })
-  const priceTiers = t('productDetail.priceTiers', { returnObjects: true })
-  const attributes = t('productDetail.attributes', { returnObjects: true })
-  const descriptionParagraphs = t('productDetail.descriptionParagraphs', { returnObjects: true })
-  const specs = t('productDetail.specs', { returnObjects: true })
-  const features = t('productDetail.features', { returnObjects: true })
   const youMayLikeItems = t('productDetail.youMayLike.items', { returnObjects: true })
 
   const tabs = [
@@ -110,6 +94,44 @@ function ProductDetail({ onBrandClick, onProfileClick, onMessageClick, onOrdersC
     { key: 'shipping', label: t('productDetail.tabs.shipping') },
     { key: 'aboutSeller', label: t('productDetail.tabs.aboutSeller') },
   ]
+
+  useEffect(() => {
+    let cancelled = false
+    setLoading(true)
+    setError('')
+    setActiveImage(0)
+    setAddedToCart(false)
+
+    getProduct(id)
+      .then((result) => {
+        if (!cancelled) setProduct(result)
+      })
+      .catch(() => {
+        if (!cancelled) setError(t('productDetail.loadError'))
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [id, t])
+
+  const galleryImages = product ? [product.image, ...(product.images ?? [])].filter(Boolean) : []
+
+  const handleAddToCart = async () => {
+    if (!product || addingToCart) return
+    setAddingToCart(true)
+    try {
+      await addItem(user, product, 1)
+      setAddedToCart(true)
+    } catch {
+      setError(t('productDetail.addToCartError'))
+    } finally {
+      setAddingToCart(false)
+    }
+  }
 
   return (
     <div className="product-detail-page">
@@ -142,221 +164,153 @@ function ProductDetail({ onBrandClick, onProfileClick, onMessageClick, onOrdersC
         </button>
       </nav>
 
-      <nav className="category-breadcrumb" aria-label="breadcrumb">
-        {breadcrumb.map((crumb, index) => (
-          <span key={crumb} className="category-breadcrumb-item">
-            {index > 0 && <i className="bi bi-chevron-right category-breadcrumb-sep" aria-hidden="true" />}
-            {crumb}
-          </span>
-        ))}
-      </nav>
+      {loading && <p className="store-products-status">{t('store.loading')}</p>}
+      {!loading && error && <p className="store-products-status store-products-error">{error}</p>}
 
-      <main className="pd-main">
-        <section className="pd-top">
-          <div className="pd-gallery">
-            <button
-              type="button"
-              className="pd-gallery-main"
-              onClick={() => setLightboxOpen(true)}
-              aria-label={t('productDetail.zoomImage')}
-            >
-              <img src={GALLERY_IMAGES[activeImage]} alt={t('productDetail.title')} />
-            </button>
-            <div className="pd-gallery-thumbs">
-              {GALLERY_IMAGES.map((img, index) => (
-                <button
-                  type="button"
-                  key={img}
-                  className={`pd-gallery-thumb ${index === activeImage ? 'is-active' : ''}`}
-                  onClick={() => setActiveImage(index)}
-                  aria-label={`${t('productDetail.title')} ${index + 1}`}
-                >
-                  <img src={img} alt="" />
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="pd-info">
-            <span className="pd-stock-badge">
-              <img src={successBadge} alt="" />
-              {t('productDetail.inStock')}
-            </span>
-
-            <h1 className="pd-title">{t('productDetail.title')}</h1>
-
-            <div className="pd-rating-row">
-              <RatingStars rating={4.6} />
-              <span className="pd-rating-score">{t('productDetail.rating')}</span>
-              <span className="pd-rating-sep">|</span>
-              <span>{t('productDetail.reviews', { count: 32 })}</span>
-              <span className="pd-rating-sep">·</span>
-              <span>{t('productDetail.sold', { count: 154 })}</span>
-            </div>
-
-            <div className="pd-price-tiers">
-              {priceTiers.map((tier, index) => (
-                <div className={`pd-price-tier ${index === 0 ? 'is-highlight' : ''}`} key={tier.range}>
-                  <span className="pd-price-tier-price">{tier.price}</span>
-                  <span className="pd-price-tier-range">{tier.range}</span>
-                </div>
-              ))}
-            </div>
-
-            <dl className="pd-attrs">
-              {attributes.map((attr) => (
-                <div className="pd-attrs-row" key={attr.label}>
-                  <dt>{attr.label}</dt>
-                  <dd>{attr.value}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-
-          <div className="pd-buybox-wrap">
-            <aside className="pd-buybox">
-              <div className="pd-supplier-row">
-                <span className="pd-supplier-avatar">R</span>
-                <div>
-                  <span className="pd-supplier-label">{t('productDetail.supplier.label')}</span>
-                  <strong className="pd-supplier-name">{t('productDetail.supplier.name')}</strong>
-                </div>
-              </div>
-
-              <ul className="pd-supplier-meta">
-                <li>
-                  <span className="pd-flag-de" aria-hidden="true" />
-                  {t('productDetail.supplier.location')}
-                </li>
-                <li>
-                  <i className="bi bi-patch-check-fill" aria-hidden="true" />
-                  {t('productDetail.supplier.verified')}
-                </li>
-                <li>
-                  <i className="bi bi-globe2" aria-hidden="true" />
-                  {t('productDetail.supplier.shipping')}
-                </li>
-              </ul>
-
-              <button type="button" className="btn pd-send-inquiry-btn">
-                {t('productDetail.supplier.sendInquiry')}
-              </button>
-
-              <button type="button" className="pd-seller-profile-link">
-                {t('productDetail.supplier.profile')}
-              </button>
-            </aside>
-
-            <button type="button" className="pd-save-btn" onClick={() => setSaved((current) => !current)}>
-              <i className={`bi ${saved ? 'bi-heart-fill' : 'bi-heart'}`} aria-hidden="true" />
-              {t('productDetail.supplier.saveForLater')}
-            </button>
-          </div>
-        </section>
-
-        <section className="pd-body">
-          <div className="pd-body-main">
-            <div className="pd-tabs">
-              {tabs.map((tab) => (
-                <button
-                  type="button"
-                  key={tab.key}
-                  className={`pd-tab ${activeTab === tab.key ? 'is-active' : ''}`}
-                  onClick={() => setActiveTab(tab.key)}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-
-            <div className="pd-description">
-              <div className={`pd-description-block ${descExpanded ? 'is-expanded' : ''}`}>
-                <p className="pd-description-preview">{descriptionParagraphs.join(' ')}</p>
-                <div className="pd-description-full">
-                  {descriptionParagraphs.map((paragraph) => (
-                    <p key={paragraph.slice(0, 24)}>{paragraph}</p>
-                  ))}
-                </div>
-              </div>
-
+      {!loading && product && (
+        <main className="pd-main">
+          <section className="pd-top">
+            <div className="pd-gallery">
               <button
                 type="button"
-                className="pd-description-toggle"
-                onClick={() => setDescExpanded((current) => !current)}
+                className="pd-gallery-main"
+                onClick={() => setLightboxOpen(true)}
+                aria-label={t('productDetail.zoomImage')}
               >
-                {descExpanded ? t('productDetail.readLess') : t('productDetail.readMore')}
+                <img src={galleryImages[activeImage]} alt={product.name} />
               </button>
+              {galleryImages.length > 1 && (
+                <div className="pd-gallery-thumbs">
+                  {galleryImages.map((img, index) => (
+                    <button
+                      type="button"
+                      key={img}
+                      className={`pd-gallery-thumb ${index === activeImage ? 'is-active' : ''}`}
+                      onClick={() => setActiveImage(index)}
+                      aria-label={`${product.name} ${index + 1}`}
+                    >
+                      <img src={img} alt="" />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
 
-              <dl className="pd-specs">
-                {specs.map((spec) => (
-                  <div className="pd-specs-row" key={spec.label}>
-                    <dt>{spec.label}</dt>
-                    <dd>{spec.value}</dd>
-                  </div>
+            <div className="pd-info">
+              <h1 className="pd-title">{product.name}</h1>
+
+              {product.category?.name && (
+                <span className="pd-rating-row">{product.category.name}</span>
+              )}
+
+              <div className="pd-price-tiers">
+                <div className="pd-price-tier is-highlight">
+                  <span className="pd-price-tier-price">${Number(product.price).toFixed(2)}</span>
+                </div>
+              </div>
+
+              {product.description && <p className="pd-description-preview">{product.description}</p>}
+            </div>
+
+            <div className="pd-buybox-wrap">
+              <aside className="pd-buybox">
+                <button
+                  type="button"
+                  className="btn pd-send-inquiry-btn"
+                  onClick={handleAddToCart}
+                  disabled={addingToCart}
+                >
+                  {addingToCart
+                    ? t('productDetail.addingToCart')
+                    : addedToCart
+                      ? t('productDetail.addedToCart')
+                      : t('productDetail.addToCart')}
+                </button>
+              </aside>
+
+              <button type="button" className="pd-save-btn" onClick={() => setSaved((current) => !current)}>
+                <i className={`bi ${saved ? 'bi-heart-fill' : 'bi-heart'}`} aria-hidden="true" />
+                {t('productDetail.supplier.saveForLater')}
+              </button>
+            </div>
+          </section>
+
+          <section className="pd-body">
+            <div className="pd-body-main">
+              <div className="pd-tabs">
+                {tabs.map((tab) => (
+                  <button
+                    type="button"
+                    key={tab.key}
+                    className={`pd-tab ${activeTab === tab.key ? 'is-active' : ''}`}
+                    onClick={() => setActiveTab(tab.key)}
+                  >
+                    {tab.label}
+                  </button>
                 ))}
-              </dl>
+              </div>
 
-              <ul className="pd-features">
-                {features.map((feature, index) => (
-                  <li key={`${feature}-${index}`}>
-                    <i className="bi bi-check2" aria-hidden="true" />
-                    {feature}
+              <div className="pd-description">
+                {activeTab === 'description' && (
+                  <p className="pd-description-full">{product.description || t('productDetail.noDescription')}</p>
+                )}
+                {activeTab !== 'description' && (
+                  <p className="pd-description-full">{t(`productDetail.tabPlaceholders.${activeTab}`)}</p>
+                )}
+              </div>
+            </div>
+
+            <aside className="pd-sidebar">
+              <h4 className="pd-sidebar-title">{t('productDetail.youMayLike.title')}</h4>
+              <ul className="pd-sidebar-list">
+                {youMayLikeItems.map((item, index) => (
+                  <li key={item.title}>
+                    <button
+                      type="button"
+                      className={`pd-sidebar-item ${selectedLikeIndex === index ? 'is-selected' : ''}`}
+                      onClick={() => setSelectedLikeIndex((current) => (current === index ? null : index))}
+                    >
+                      <img src={YOU_MAY_LIKE_IMAGES[index]} alt={item.title} />
+                      <div>
+                        <span className="pd-sidebar-item-title">{item.title}</span>
+                        <span className="pd-sidebar-item-price">{item.priceRange}</span>
+                      </div>
+                    </button>
                   </li>
                 ))}
               </ul>
-            </div>
-          </div>
+            </aside>
+          </section>
 
-          <aside className="pd-sidebar">
-            <h4 className="pd-sidebar-title">{t('productDetail.youMayLike.title')}</h4>
-            <ul className="pd-sidebar-list">
-              {youMayLikeItems.map((item, index) => (
-                <li key={item.title}>
-                  <button
-                    type="button"
-                    className={`pd-sidebar-item ${selectedLikeIndex === index ? 'is-selected' : ''}`}
-                    onClick={() => setSelectedLikeIndex((current) => (current === index ? null : index))}
-                  >
-                    <img src={YOU_MAY_LIKE_IMAGES[index]} alt={item.title} />
-                    <div>
-                      <span className="pd-sidebar-item-title">{item.title}</span>
-                      <span className="pd-sidebar-item-price">{item.priceRange}</span>
-                    </div>
-                  </button>
-                </li>
+          <section className="pd-related">
+            <h3 className="store-section-title">{t('productDetail.relatedProducts.title')}</h3>
+            <div className="pd-related-grid">
+              {RELATED_PRODUCT_IMAGES.map((img, index) => (
+                <button
+                  type="button"
+                  className={`pd-related-card ${selectedRelatedIndex === index ? 'is-selected' : ''}`}
+                  key={img}
+                  onClick={() => setSelectedRelatedIndex((current) => (current === index ? null : index))}
+                >
+                  <img src={img} alt={t('productDetail.relatedProducts.name')} />
+                  <span className="pd-related-name">{t('productDetail.relatedProducts.name')}</span>
+                  <span className="pd-related-price">{t('productDetail.relatedProducts.priceRange')}</span>
+                </button>
               ))}
-            </ul>
-          </aside>
-        </section>
+            </div>
+          </section>
 
-        <section className="pd-related">
-          <h3 className="store-section-title">{t('productDetail.relatedProducts.title')}</h3>
-          <div className="pd-related-grid">
-            {RELATED_PRODUCT_IMAGES.map((img, index) => (
-              <button
-                type="button"
-                className={`pd-related-card ${selectedRelatedIndex === index ? 'is-selected' : ''}`}
-                key={img}
-                onClick={() => setSelectedRelatedIndex((current) => (current === index ? null : index))}
-              >
-                <img src={img} alt={t('productDetail.relatedProducts.name')} />
-                <span className="pd-related-name">{t('productDetail.relatedProducts.name')}</span>
-                <span className="pd-related-price">{t('productDetail.relatedProducts.priceRange')}</span>
-              </button>
-            ))}
-          </div>
-        </section>
-
-        <section className="store-discount-banner">
-          <div className="store-discount-text">
-            <h3>{t('productDetail.discountBanner.title')}</h3>
-            <p>{t('productDetail.discountBanner.subtitle')}</p>
-          </div>
-          <button type="button" className="btn store-discount-btn">
-            {t('productDetail.discountBanner.cta')}
-          </button>
-        </section>
-      </main>
+          <section className="store-discount-banner">
+            <div className="store-discount-text">
+              <h3>{t('productDetail.discountBanner.title')}</h3>
+              <p>{t('productDetail.discountBanner.subtitle')}</p>
+            </div>
+            <button type="button" className="btn store-discount-btn">
+              {t('productDetail.discountBanner.cta')}
+            </button>
+          </section>
+        </main>
+      )}
 
       <footer className="store-footer">
         <div className="store-footer-top">
@@ -416,7 +370,7 @@ function ProductDetail({ onBrandClick, onProfileClick, onMessageClick, onOrdersC
         </div>
       </footer>
 
-      {lightboxOpen && (
+      {lightboxOpen && product && (
         <div
           className="pd-lightbox-overlay"
           role="dialog"
@@ -432,8 +386,8 @@ function ProductDetail({ onBrandClick, onProfileClick, onMessageClick, onOrdersC
             <i className="bi bi-x-lg" aria-hidden="true" />
           </button>
           <img
-            src={GALLERY_IMAGES[activeImage]}
-            alt={t('productDetail.title')}
+            src={galleryImages[activeImage]}
+            alt={product.name}
             className="pd-lightbox-image"
             onClick={(event) => event.stopPropagation()}
           />

@@ -1,4 +1,13 @@
 {
+  "orders": {
+    "title": "My Orders",
+    "loading": "Loading orders...",
+    "empty": "You have no orders yet.",
+    "loadError": "Couldn't load your orders. Please try again.",
+    "orderNumber": "Order #{{id}}",
+    "item": "Item",
+    "total": "Total"
+  },
   "login": {
     "brand": "Borcelle",
     "brandSubtitle": "Online Store",
@@ -7,14 +16,20 @@
     "welcome": "Welcome!",
     "subtitle": "Please log in to continue",
     "phonePlaceholder": "Add number",
-    "submit": "Log in"
+    "submit": "Log in",
+    "sending": "Sending...",
+    "sendError": "Couldn't send the verification code. Please check the number and try again."
   },
   "verify": {
     "title": "Verification",
     "subtitle": "Enter the code we send to :",
     "resendLabel": "Didn't receive code ?",
     "resendCode": "Resend Code",
+    "resending": "Sending...",
     "submit": "Verify",
+    "verifying": "Verifying...",
+    "invalidCode": "Invalid code. Please try again.",
+    "missingSession": "Session expired. Please go back and request a new code.",
     "or": "OR",
     "goBack": "Go back"
   },
@@ -25,7 +40,11 @@
     "namePlaceholder": "Name",
     "emailPlaceholder": "Email",
     "phonePlaceholder": "Add number",
-    "submit": "Save"
+    "submit": "Save",
+    "saving": "Saving...",
+    "saveError": "Couldn't save your profile. Please try again.",
+    "requiredFields": "Please enter your name, email and phone number to continue.",
+    "invalidEmail": "Please enter a valid email address."
   },
   "payment": {
     "title": "Payment Method",
@@ -49,6 +68,8 @@
     "tax": "Tax",
     "netTotal": "Net Total",
     "confirm": "Confirm Payment",
+    "submitting": "Placing order...",
+    "orderError": "Couldn't place your order. Please try again.",
     "viewOrderedItems": "View ordered Items",
     "successMessage": "you have successfully paid for your order",
     "continue": "Back to store",
@@ -65,7 +86,11 @@
     "contactUs": "Contact us page",
     "faq": "FAQ page",
     "termsAndCondition": "Terms and condition",
-    "privacyPolicy": "Privacy Policy page"
+    "privacyPolicy": "Privacy Policy page",
+    "save": "Save changes",
+    "saving": "Saving...",
+    "saved": "Saved.",
+    "saveError": "Couldn't save your changes."
   },
   "terms": {
     "title": "Terms and condition",
@@ -103,6 +128,8 @@
   },
   "store": {
     "menu": "All category",
+    "loading": "Loading products...",
+    "loadError": "Couldn't load products. Please try again later.",
     "hotOffers": "Hot offers",
     "giftBoxes": "Gift boxes",
     "aboutUs": "About Us",
@@ -248,6 +275,7 @@
     }
   },
   "category": {
+    "allCategories": "All categories",
     "breadcrumb": ["Home", "Electronics", "Mobile accessory"],
     "filters": {
       "title": "Filters",
@@ -342,6 +370,17 @@
   },
   "productDetail": {
     "breadcrumb": ["Home", "Clothings", "Men's wear", "Summer clothing"],
+    "loadError": "Couldn't load this product.",
+    "noDescription": "No description available for this product.",
+    "addToCart": "Add to cart",
+    "addingToCart": "Adding...",
+    "addedToCart": "Added to cart",
+    "addToCartError": "Couldn't add this item to your cart.",
+    "tabPlaceholders": {
+      "reviews": "No reviews yet.",
+      "shipping": "Shipping details are not available yet.",
+      "aboutSeller": "Seller information is not available yet."
+    },
     "inStock": "In stock",
     "title": "Mens Long Sleeve T-shirt Cotton Base Layer Slim Muscle",
     "rating": "9.3",
@@ -422,6 +461,7 @@
   "cartPage": {
     "title": "My cart ({{count}})",
     "mobileTitle": "Shopping cart",
+    "loadError": "Couldn't load your cart. Please try again.",
     "items": [
       {
         "title": "T-shirts with multiple colors, for men and lady",

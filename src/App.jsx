@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom'
 import { ThemeProvider } from './context/ThemeContext'
+import { AuthProvider } from './context/AuthContext'
+import { resendOtp } from './api/auth'
 import Login from './pages/Login/Login'
 import Verify from './pages/Verify/Verify'
 import Profile from './pages/Profile/Profile'
@@ -12,6 +14,7 @@ import Store from './pages/Store/Store'
 import Category from './pages/Category/Category'
 import ProductDetail from './pages/ProductDetail/ProductDetail'
 import Cart from './pages/Cart/Cart'
+import Orders from './pages/Orders/Orders'
 
 function AppRoutes() {
   const navigate = useNavigate()
@@ -22,6 +25,8 @@ function AppRoutes() {
     navigate('/checkout/verify')
   }
 
+  const handleResendCode = () => resendOtp(phone)
+
   return (
     <Routes>
       <Route
@@ -30,8 +35,9 @@ function AppRoutes() {
           <Store
             onProfileClick={() => navigate('/account')}
             onCartClick={() => navigate('/cart')}
+            onOrdersClick={() => navigate('/orders')}
             onCategoryClick={() => navigate('/category')}
-            onProductClick={() => navigate('/product')}
+            onProductClick={(id) => navigate(`/product/${id}`)}
           />
         }
       />
@@ -42,17 +48,19 @@ function AppRoutes() {
             onBrandClick={() => navigate('/')}
             onProfileClick={() => navigate('/account')}
             onCartClick={() => navigate('/cart')}
-            onProductClick={() => navigate('/product')}
+            onOrdersClick={() => navigate('/orders')}
+            onProductClick={(id) => navigate(`/product/${id}`)}
           />
         }
       />
       <Route
-        path="/product"
+        path="/product/:id"
         element={
           <ProductDetail
             onBrandClick={() => navigate('/')}
             onProfileClick={() => navigate('/account')}
             onCartClick={() => navigate('/cart')}
+            onOrdersClick={() => navigate('/orders')}
           />
         }
       />
@@ -62,8 +70,20 @@ function AppRoutes() {
           <Cart
             onBrandClick={() => navigate('/')}
             onProfileClick={() => navigate('/account')}
+            onOrdersClick={() => navigate('/orders')}
             onBackToShop={() => navigate('/')}
             onCheckout={() => navigate('/checkout/login')}
+          />
+        }
+      />
+      <Route
+        path="/orders"
+        element={
+          <Orders
+            onBrandClick={() => navigate('/')}
+            onProfileClick={() => navigate('/account')}
+            onCartClick={() => navigate('/cart')}
+            onBack={() => navigate(-1)}
           />
         }
       />
@@ -77,6 +97,7 @@ function AppRoutes() {
           <Verify
             phone={phone}
             onBack={() => navigate(-1)}
+            onResend={handleResendCode}
             onSubmit={() => navigate('/checkout/profile')}
           />
         }
@@ -137,9 +158,11 @@ function AppRoutes() {
 function App() {
   return (
     <ThemeProvider>
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
+      </AuthProvider>
     </ThemeProvider>
   )
 }

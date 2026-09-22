@@ -1,6 +1,10 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import StoreNavbar from '../../components/StoreNavbar/StoreNavbar'
+import { useAuth } from '../../context/AuthContext'
+import { getAddresses, createAddress } from '../../api/address'
+import { createOrder } from '../../api/orders'
+import { getCart, removeCartLine } from '../../api/cart'
 import storefrontImage from '../../assets/images/login-storefront.png'
 import syriatelLogo from '../../assets/images/syriatel-logo.png'
 import mtnLogo from '../../assets/images/mtn-logo.png'
@@ -21,15 +25,56 @@ const ORDER_ITEMS = [
   { id: 3, qty: 2, price: '600 AED' },
 ]
 
+async function ensureAddressId(user) {
+  const addresses = await getAddresses()
+  if (addresses.length > 0) return addresses[0].id
+
+  const created = await createAddress({
+    name: user?.name || 'Customer',
+    phone: user?.phone || '',
+    city: 'Damascus',
+    neighborhood: '-',
+    street: '-',
+    building: '-',
+    zip_code: '-',
+    lat: '0',
+    lng: '0',
+    is_default: true,
+  })
+  return created?.data?.id
+}
+
 function Payment({ onConfirm, onBrandClick, onProfileClick, onBack }) {
   const { t } = useTranslation()
+  const { user } = useAuth()
   const [method, setMethod] = useState('cash')
-  const [discountCode, setDiscountCode] = useState('5601')
+  const [discountCode, setDiscountCode] = useState('')
   const [showSuccess, setShowSuccess] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState('')
 
-  const handleConfirm = (event) => {
+  const handleConfirm = async (event) => {
     event.preventDefault()
-    setShowSuccess(true)
+    if (submitting) return
+    setError('')
+    setSubmitting(true)
+    try {
+      const addressId = await ensureAddressId(user)
+      await createOrder({
+        note: '',
+        paymentType: method.toUpperCase(),
+        addressId,
+        couponCode: discountCode || undefined,
+      })
+      const cartLines = await getCart()
+      await Promise.all(cartLines.map((line) => removeCartLine(line.id)))
+      setShowSuccess(true)
+    } catch (err) {
+      console.error(err)
+      setError(t('payment.orderError'))
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   const handleContinue = () => {
@@ -145,8 +190,10 @@ function Payment({ onConfirm, onBrandClick, onProfileClick, onBack }) {
               </div>
             </div>
 
-            <button type="submit" className="btn login-submit-btn w-100">
-              {t('payment.confirm')}
+            {error && <p className="login-error">{error}</p>}
+
+            <button type="submit" className="btn login-submit-btn w-100" disabled={submitting}>
+              {submitting ? t('payment.submitting') : t('payment.confirm')}
             </button>
           </form>
         </div>

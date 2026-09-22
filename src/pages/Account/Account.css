@@ -1,6 +1,16 @@
-.account-page {
+﻿.account-page {
   min-height: 100svh;
   background-color: var(--bs-body-bg);
+}
+
+.login-error {
+  color: #dc3545;
+  font-size: 0.9rem;
+}
+
+.account-saved-message {
+  color: #198754;
+  font-size: 0.9rem;
 }
 
 .account-cover {
