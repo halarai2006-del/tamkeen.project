@@ -1,10 +1,9 @@
-import { apiFetch } from './client'
+import { apiFetch, apiFetchAllPages } from './client'
 import { isDemoSession, getDemoOrders, createDemoOrder, removeDemoOrder } from '../utils/demoMode'
 
 export async function getOrders() {
   if (isDemoSession()) return getDemoOrders()
-  const result = await apiFetch('/order')
-  return result?.data ?? []
+  return apiFetchAllPages('/order')
 }
 
 export function createOrder({ note, paymentType, addressId, couponCode }) {

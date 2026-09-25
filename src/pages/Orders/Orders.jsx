@@ -1,21 +1,54 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import StoreNavbar from '../../components/StoreNavbar/StoreNavbar'
-import { getOrders } from '../../api/orders'
+import { getOrders, cancelOrder } from '../../api/orders'
 import './Orders.css'
+
+// Orders already in one of these states can't be cancelled any more.
+function isCancellable(order) {
+  return !/cancel|deliver|complet|reject/i.test(String(order.status ?? ''))
+}
 
 function Orders({ onBrandClick, onProfileClick, onCartClick, onBack }) {
   const { t } = useTranslation()
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [cancellingId, setCancellingId] = useState(null)
+  const [cancelReason, setCancelReason] = useState('')
+  const [cancelBusy, setCancelBusy] = useState(false)
+  const [cancelError, setCancelError] = useState('')
 
-  useEffect(() => {
+  const loadOrders = () =>
     getOrders()
       .then(setOrders)
       .catch(() => setError(t('orders.loadError')))
       .finally(() => setLoading(false))
+
+  useEffect(() => {
+    loadOrders()
   }, [t])
+
+  const startCancel = (id) => {
+    setCancellingId(id)
+    setCancelReason('')
+    setCancelError('')
+  }
+
+  const handleCancel = async (event) => {
+    event.preventDefault()
+    setCancelBusy(true)
+    setCancelError('')
+    try {
+      await cancelOrder(cancellingId, cancelReason.trim())
+      setCancellingId(null)
+      await loadOrders()
+    } catch (err) {
+      setCancelError(err.message || t('orders.cancelError'))
+    } finally {
+      setCancelBusy(false)
+    }
+  }
 
   return (
     <div className="orders-page">
@@ -64,6 +97,42 @@ function Orders({ onBrandClick, onProfileClick, onCartClick, onBack }) {
                   <span className="order-card-total">
                     {t('orders.total')}: {order.total}
                   </span>
+                )}
+                {isCancellable(order) && cancellingId !== order.id && (
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-outline-danger order-cancel-btn"
+                    onClick={() => startCancel(order.id)}
+                  >
+                    {t('orders.cancel')}
+                  </button>
+                )}
+                {cancellingId === order.id && (
+                  <form className="order-cancel-form" onSubmit={handleCancel}>
+                    <textarea
+                      className="form-control"
+                      rows={2}
+                      placeholder={t('orders.cancelReason')}
+                      aria-label={t('orders.cancelReason')}
+                      value={cancelReason}
+                      onChange={(event) => setCancelReason(event.target.value)}
+                      required
+                    />
+                    {cancelError && <p className="orders-error">{cancelError}</p>}
+                    <div className="order-cancel-actions">
+                      <button type="submit" className="btn btn-sm btn-danger" disabled={cancelBusy}>
+                        {t('orders.confirmCancel')}
+                      </button>
+                      <button
+                        type="button"
+                        className="btn btn-sm btn-outline-secondary"
+                        onClick={() => setCancellingId(null)}
+                        disabled={cancelBusy}
+                      >
+                        {t('orders.keep')}
+                      </button>
+                    </div>
+                  </form>
                 )}
               </li>
             ))}

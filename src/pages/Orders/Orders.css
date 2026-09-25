@@ -62,3 +62,21 @@
   margin-top: 12px;
   font-weight: 600;
 }
+
+.order-cancel-btn {
+  margin-top: 12px;
+}
+
+.order-cancel-form {
+  margin-top: 12px;
+}
+
+.order-cancel-form .orders-error {
+  margin: 8px 0 0;
+}
+
+.order-cancel-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}

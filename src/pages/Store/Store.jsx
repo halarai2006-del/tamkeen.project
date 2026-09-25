@@ -3,8 +3,9 @@ import { useTranslation } from 'react-i18next'
 import StoreNavbar from '../../components/StoreNavbar/StoreNavbar'
 import MobileMenu from '../../components/MobileMenu/MobileMenu'
 import { getCategories } from '../../api/categories'
-import { getProducts } from '../../api/products'
-import { PLACEHOLDER_IMAGE } from '../../utils/placeholderImage'
+import { getAllProducts } from '../../api/products'
+import { PLACEHOLDER_IMAGE, handleImageFallback } from '../../utils/placeholderImage'
+import { DEAL_TILES, HOME_OUTDOOR_TILES, CONSUMER_TILES, resolveTiles } from './storeTiles'
 import heroBanner from '../../assets/images/Banner-board-800x420 2.png'
 import homeOutdoorBanner from '../../assets/images/Group 969.png'
 import consumerBanner from '../../assets/images/Group 970.png'
@@ -96,9 +97,7 @@ function Store({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick, on
   const { t } = useTranslation()
   const [menuOpen, setMenuOpen] = useState(false)
   const [categories, setCategories] = useState([])
-  const [shelfSections, setShelfSections] = useState([])
-  const [dealProducts, setDealProducts] = useState([])
-  const [recommendedProducts, setRecommendedProducts] = useState([])
+  const [products, setProducts] = useState([])
   const [productsLoading, setProductsLoading] = useState(true)
   const [productsError, setProductsError] = useState('')
   const [itemNeeded, setItemNeeded] = useState('')
@@ -117,21 +116,11 @@ function Store({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick, on
       setProductsLoading(true)
       setProductsError('')
       try {
-        const fetchedCategories = await getCategories()
-        const shelfCategories = fetchedCategories.slice(0, 2)
-        const sections = await Promise.all(
-          shelfCategories.map(async (category) => ({
-            category,
-            products: await getProducts({ categoryId: category.id }),
-          })),
-        )
-        const recommended = await getProducts()
+        const [fetchedCategories, fetchedProducts] = await Promise.all([getCategories(), getAllProducts()])
 
         if (cancelled) return
         setCategories(fetchedCategories)
-        setShelfSections(sections)
-        setRecommendedProducts(recommended)
-        setDealProducts(recommended.slice(0, 4))
+        setProducts(fetchedProducts)
       } catch {
         if (!cancelled) setProductsError(t('store.loadError'))
       } finally {
@@ -148,6 +137,20 @@ function Store({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick, on
   const toggleProductSelect = (key) => {
     setSelectedProductKey((current) => (current === key ? null : key))
   }
+
+  // Tiles matching a backend category open it; design-only tiles just highlight.
+  const handleTileClick = (tile) => {
+    if (tile.categoryIds.length > 0) onCategoryClick?.(tile.categoryIds)
+    else toggleProductSelect(tile.key)
+  }
+
+  const dealTiles = resolveTiles(DEAL_TILES, categories, products)
+  const shelves = [
+    { key: 'home-outdoor', titleKey: 'store.homeOutdoor', banner: homeOutdoorBanner, tiles: resolveTiles(HOME_OUTDOOR_TILES, categories, products) },
+    { key: 'consumer', titleKey: 'store.consumerElectronics', banner: consumerBanner, tiles: resolveTiles(CONSUMER_TILES, categories, products) },
+  ]
+  // Products without a photo are left out of this preview so it isn't full of blank boxes.
+  const recommendedProducts = products.filter((product) => product.image).slice(0, 10)
 
   const handleInquirySubmit = (event) => {
     event.preventDefault()
@@ -217,7 +220,7 @@ function Store({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick, on
                 <button
                   type="button"
                   className={`store-category-item ${index === 0 ? 'is-active' : ''}`}
-                  onClick={onCategoryClick}
+                  onClick={() => onCategoryClick?.([category.id])}
                 >
                   {category.name}
                 </button>
@@ -297,59 +300,47 @@ function Store({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick, on
                 </span>
               </div>
               <div className="store-deals-grid">
-                {dealProducts.map((product, index) => (
+                {dealTiles.map((tile) => (
                   <button
                     type="button"
-                    className={`store-deal-card ${selectedProductKey === `deal-${index}` ? 'is-selected' : ''}`}
-                    onClick={() => {
-                      toggleProductSelect(`deal-${index}`)
-                      onProductClick?.(product.id)
-                    }}
-                    key={product.id}
+                    className={`store-deal-card ${selectedProductKey === tile.key ? 'is-selected' : ''}`}
+                    onClick={() => handleTileClick(tile)}
+                    key={tile.key}
                   >
-                    <img src={product.image || PLACEHOLDER_IMAGE} alt={product.name} className="store-deal-card-img" />
-                    <span className="store-deal-card-title">{product.name}</span>
+                    <img src={tile.image} alt={t(tile.titleKey)} className="store-deal-card-img" />
+                    <span className="store-deal-card-title">{t(tile.titleKey)}</span>
+                    <span className="store-deal-card-badge">{tile.discount}</span>
                   </button>
                 ))}
               </div>
             </div>
           </section>
 
-          {shelfSections.map((shelf, shelfIndex) => (
-            <section className="store-banner-section" key={shelf.category.id}>
-              <div
-                className="store-banner"
-                style={{
-                  backgroundImage: `url(${shelfIndex === 0 ? homeOutdoorBanner : consumerBanner})`,
-                }}
-              >
-                <h3 className="store-banner-title">{shelf.category.name}</h3>
-                <button type="button" className="btn store-banner-btn" onClick={onCategoryClick}>
+          {shelves.map((shelf) => (
+            <section className="store-banner-section" key={shelf.key}>
+              <div className="store-banner" style={{ backgroundImage: `url(${shelf.banner})` }}>
+                <h3 className="store-banner-title">{t(shelf.titleKey)}</h3>
+                <button type="button" className="btn store-banner-btn" onClick={() => onCategoryClick?.()}>
                   {t('store.sourceNow')}
                 </button>
               </div>
               <div className="store-product-grid">
-                {shelf.products.map((product, index) => (
+                {shelf.tiles.map((tile) => (
                   <button
                     type="button"
-                    className={`store-product-card ${
-                      selectedProductKey === `shelf-${shelfIndex}-${index}` ? 'is-selected' : ''
-                    }`}
-                    onClick={() => {
-                      toggleProductSelect(`shelf-${shelfIndex}-${index}`)
-                      onProductClick?.(product.id)
-                    }}
-                    key={product.id}
+                    className={`store-product-card ${selectedProductKey === tile.key ? 'is-selected' : ''}`}
+                    onClick={() => handleTileClick(tile)}
+                    key={tile.key}
                   >
                     <div className="store-product-card-info">
-                      <span className="store-product-card-title">{product.name}</span>
+                      <span className="store-product-card-title">{t(tile.titleKey)}</span>
                       <span className="store-product-card-price">
                         {t('store.from')}
                         <br />
-                        {product.price}
+                        USD {tile.price}
                       </span>
                     </div>
-                    <img src={product.image || PLACEHOLDER_IMAGE} alt={product.name} className="store-product-card-img" />
+                    <img src={tile.image} alt={t(tile.titleKey)} className="store-product-card-img" />
                   </button>
                 ))}
               </div>
@@ -440,7 +431,12 @@ function Store({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick, on
                   key={product.id}
                   onClick={() => onProductClick?.(product.id)}
                 >
-                  <img src={product.image || PLACEHOLDER_IMAGE} alt={product.name} className="store-recommended-img" />
+                  <img
+                    src={product.image || PLACEHOLDER_IMAGE}
+                    alt={product.name}
+                    className="store-recommended-img"
+                    onError={handleImageFallback}
+                  />
                   <span className="store-recommended-price">{product.price}</span>
                   <span className="store-recommended-desc">{product.name}</span>
                 </button>

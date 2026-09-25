@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSearchParams } from 'react-router-dom'
 import StoreNavbar from '../../components/StoreNavbar/StoreNavbar'
 import { getCategories } from '../../api/categories'
-import { getProducts } from '../../api/products'
-import { PLACEHOLDER_IMAGE } from '../../utils/placeholderImage'
+import { getAllProducts } from '../../api/products'
+import { PLACEHOLDER_IMAGE, handleImageFallback } from '../../utils/placeholderImage'
 import borcelleLogo from '../../assets/images/borcelle-logo.png'
 import flagUk from '../../assets/images/icon.png'
 import '../Store/Store.css'
@@ -67,6 +68,14 @@ const FOOTER_COLUMNS = [
 const RATING_TIERS = [5, 4, 3, 2]
 const PAGE_SIZES = [10, 20, 50]
 
+// The home page opens this page with ?category=8,9,14 to pre-select categories.
+function parseCategoryIds(value) {
+  return (value ?? '')
+    .split(',')
+    .map(Number)
+    .filter((id) => Number.isInteger(id) && id > 0)
+}
+
 function RatingStars({ rating }) {
   const stars = []
   for (let i = 1; i <= 5; i += 1) {
@@ -112,7 +121,8 @@ function FilterSection({ title, seeAllLabel, children }) {
 function Category({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick, onCartClick, onProductClick }) {
   const { t } = useTranslation()
   const [apiCategories, setApiCategories] = useState([])
-  const [activeCategoryId, setActiveCategoryId] = useState(null)
+  const [searchParams] = useSearchParams()
+  const [activeCategoryIds, setActiveCategoryIds] = useState(() => parseCategoryIds(searchParams.get('category')))
   const [products, setProducts] = useState([])
   const [productsLoading, setProductsLoading] = useState(true)
   const [productsError, setProductsError] = useState('')
@@ -149,8 +159,9 @@ function Category({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick,
     let cancelled = false
     setProductsLoading(true)
     setProductsError('')
-    getProducts({
-      categoryId: activeCategoryId,
+    setCurrentPage(1)
+    getAllProducts({
+      categoryIds: activeCategoryIds,
       priceFrom: minPrice,
       priceTo: maxPrice,
       ...SORT_TO_API[sortBy],
@@ -167,11 +178,16 @@ function Category({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick,
     return () => {
       cancelled = true
     }
-  }, [activeCategoryId, minPrice, maxPrice, sortBy, t])
+  }, [activeCategoryIds, minPrice, maxPrice, sortBy, t])
 
   const activeCategoryName =
-    apiCategories.find((category) => category.id === activeCategoryId)?.name ??
-    t('category.allCategories')
+    apiCategories
+      .filter((category) => activeCategoryIds.includes(category.id))
+      .map((category) => category.name)
+      .join(', ') || t('category.allCategories')
+
+  const totalPages = Math.max(1, Math.ceil(products.length / pageSize))
+  const visibleProducts = products.slice((currentPage - 1) * pageSize, currentPage * pageSize)
 
   const toggleValue = (list, setList, value) => {
     setList(list.includes(value) ? list.filter((item) => item !== value) : [...list, value])
@@ -277,8 +293,8 @@ function Category({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick,
               <li>
                 <button
                   type="button"
-                  className={`category-filter-list-item ${activeCategoryId === null ? 'is-active' : ''}`}
-                  onClick={() => setActiveCategoryId(null)}
+                  className={`category-filter-list-item ${activeCategoryIds.length === 0 ? 'is-active' : ''}`}
+                  onClick={() => setActiveCategoryIds([])}
                 >
                   {t('category.allCategories')}
                 </button>
@@ -287,8 +303,8 @@ function Category({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick,
                 <li key={category.id}>
                   <button
                     type="button"
-                    className={`category-filter-list-item ${activeCategoryId === category.id ? 'is-active' : ''}`}
-                    onClick={() => setActiveCategoryId(category.id)}
+                    className={`category-filter-list-item ${activeCategoryIds.includes(category.id) ? 'is-active' : ''}`}
+                    onClick={() => setActiveCategoryIds([category.id])}
                   >
                     {category.name}
                   </button>
@@ -473,7 +489,7 @@ function Category({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick,
           )}
 
           <div className={`category-products is-${viewMode}`}>
-            {!productsLoading && products.map((product) => {
+            {!productsLoading && visibleProducts.map((product) => {
               const isSaved = savedItems.includes(product.id)
               const isSelected = selectedProductIndex === product.id
               return (
@@ -494,7 +510,12 @@ function Category({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick,
                     <i className={`bi ${isSaved ? 'bi-heart-fill' : 'bi-heart'}`} aria-hidden="true" />
                   </button>
 
-                  <img src={product.image || PLACEHOLDER_IMAGE} alt={product.name} className="category-product-thumb" />
+                  <img
+                    src={product.image || PLACEHOLDER_IMAGE}
+                    alt={product.name}
+                    className="category-product-thumb"
+                    onError={handleImageFallback}
+                  />
 
                   <div className="category-product-info">
                     <h3 className="category-product-title">{product.name}</h3>
@@ -531,7 +552,10 @@ function Category({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick,
               <select
                 className="form-select form-select-sm"
                 value={pageSize}
-                onChange={(event) => setPageSize(Number(event.target.value))}
+                onChange={(event) => {
+                  setPageSize(Number(event.target.value))
+                  setCurrentPage(1)
+                }}
               >
                 {PAGE_SIZES.map((size) => (
                   <option key={size} value={size}>
@@ -551,7 +575,7 @@ function Category({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick,
               >
                 <i className="bi bi-chevron-left" aria-hidden="true" />
               </button>
-              {[1, 2, 3].map((page) => (
+              {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
                 <button
                   type="button"
                   key={page}
@@ -565,8 +589,8 @@ function Category({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick,
                 type="button"
                 className="category-page-btn category-page-arrow"
                 aria-label="next page"
-                disabled={currentPage === 3}
-                onClick={() => setCurrentPage((page) => Math.min(3, page + 1))}
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
               >
                 <i className="bi bi-chevron-right" aria-hidden="true" />
               </button>

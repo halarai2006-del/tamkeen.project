@@ -1,10 +1,9 @@
-import { apiFetch } from './client'
+import { apiFetch, apiFetchAllPages } from './client'
 import { isDemoSession, getDemoAddresses, addDemoAddress } from '../utils/demoMode'
 
 export async function getAddresses() {
   if (isDemoSession()) return getDemoAddresses()
-  const result = await apiFetch('/address')
-  return result?.data ?? []
+  return apiFetchAllPages('/address')
 }
 
 export function createAddress(data) {

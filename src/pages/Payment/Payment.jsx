@@ -1,14 +1,15 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import StoreNavbar from '../../components/StoreNavbar/StoreNavbar'
 import { useAuth } from '../../context/AuthContext'
 import { getAddresses, createAddress } from '../../api/address'
 import { createOrder } from '../../api/orders'
 import { getCart, removeCartLine } from '../../api/cart'
+import { loadCartLines } from '../../cart/cartService'
+import { PLACEHOLDER_IMAGE, handleImageFallback } from '../../utils/placeholderImage'
 import storefrontImage from '../../assets/images/login-storefront.png'
 import syriatelLogo from '../../assets/images/syriatel-logo.png'
 import mtnLogo from '../../assets/images/mtn-logo.png'
-import smartwatchImage from '../../assets/images/smartwatch-product.png'
 import successBadge from '../../assets/images/success-badge.png'
 import '../Login/Login.css'
 import './Payment.css'
@@ -19,11 +20,7 @@ const PAYMENT_METHODS = [
   { id: 'mtn', labelKey: 'payment.mtn', image: mtnLogo },
 ]
 
-const ORDER_ITEMS = [
-  { id: 1, qty: 2, price: '600 AED' },
-  { id: 2, qty: 2, price: '600 AED' },
-  { id: 3, qty: 2, price: '600 AED' },
-]
+const formatMoney = (amount) => `$${amount.toFixed(2)}`
 
 async function ensureAddressId(user) {
   const addresses = await getAddresses()
@@ -46,16 +43,45 @@ async function ensureAddressId(user) {
 
 function Payment({ onConfirm, onBrandClick, onProfileClick, onBack }) {
   const { t } = useTranslation()
-  const { user } = useAuth()
+  const { user, loading: authLoading } = useAuth()
   const [method, setMethod] = useState('cash')
   const [discountCode, setDiscountCode] = useState('')
   const [showSuccess, setShowSuccess] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
+  const [items, setItems] = useState([])
+  const [itemsLoading, setItemsLoading] = useState(true)
+  const [itemsError, setItemsError] = useState(false)
+
+  useEffect(() => {
+    if (authLoading) return
+    let cancelled = false
+    loadCartLines(user)
+      .then((lines) => {
+        if (cancelled) return
+        setItems(lines)
+        setItemsError(false)
+      })
+      .catch((err) => {
+        console.error(err)
+        if (!cancelled) setItemsError(true)
+      })
+      .finally(() => {
+        if (!cancelled) setItemsLoading(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [user, authLoading])
+
+  const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
+  const discount = 0
+  const tax = 0
+  const netTotal = subtotal - discount + tax
 
   const handleConfirm = async (event) => {
     event.preventDefault()
-    if (submitting) return
+    if (submitting || itemsLoading || items.length === 0) return
     setError('')
     setSubmitting(true)
     try {
@@ -68,6 +94,7 @@ function Payment({ onConfirm, onBrandClick, onProfileClick, onBack }) {
       })
       const cartLines = await getCart()
       await Promise.all(cartLines.map((line) => removeCartLine(line.id)))
+      setItems([])
       setShowSuccess(true)
     } catch (err) {
       console.error(err)
@@ -153,46 +180,61 @@ function Payment({ onConfirm, onBrandClick, onProfileClick, onBack }) {
         <div className="payment-summary-panel">
           <form className="payment-summary" onSubmit={handleConfirm}>
             <div className="payment-items">
-              {ORDER_ITEMS.map((item) => (
-                <div className="payment-item" key={item.id}>
-                  <span className="payment-item-thumb">
-                    <img src={smartwatchImage} alt="" className="payment-item-thumb-img" />
-                    <span className="payment-item-badge">
-                      <i className="bi bi-check-circle-fill" aria-hidden="true" />
+              {itemsLoading && <p className="payment-item-desc">{t('payment.loadingItems')}</p>}
+              {!itemsLoading && itemsError && <p className="login-error">{t('cartPage.loadError')}</p>}
+              {!itemsLoading && !itemsError && items.length === 0 && (
+                <p className="payment-item-desc">{t('payment.emptyCart')}</p>
+              )}
+              {!itemsLoading &&
+                items.map((item) => (
+                  <div className="payment-item" key={item.lineId ?? item.productId}>
+                    <span className="payment-item-thumb">
+                      <img
+                        src={item.image || PLACEHOLDER_IMAGE}
+                        alt=""
+                        className="payment-item-thumb-img"
+                        onError={handleImageFallback}
+                      />
+                      <span className="payment-item-badge">
+                        <i className="bi bi-check-circle-fill" aria-hidden="true" />
+                      </span>
                     </span>
-                  </span>
-                  <span className="payment-item-info">
-                    <span className="payment-item-name">{t('payment.itemName')}</span>
-                    <span className="payment-item-desc">{t('payment.itemDescription')}</span>
-                  </span>
-                  <span className="payment-item-qty">{item.qty}</span>
-                  <span className="payment-item-price">{item.price}</span>
-                </div>
-              ))}
+                    <span className="payment-item-info">
+                      <span className="payment-item-name">{item.name}</span>
+                      <span className="payment-item-desc">{formatMoney(item.price)}</span>
+                    </span>
+                    <span className="payment-item-qty">{item.quantity}</span>
+                    <span className="payment-item-price">{formatMoney(item.price * item.quantity)}</span>
+                  </div>
+                ))}
             </div>
 
             <div className="payment-totals">
               <div className="payment-total-row">
                 <span>{t('payment.total')}</span>
-                <span>110.000</span>
+                <span>{formatMoney(subtotal)}</span>
               </div>
               <div className="payment-total-row">
                 <span>{t('payment.discount')}</span>
-                <span>0</span>
+                <span>{formatMoney(discount)}</span>
               </div>
               <div className="payment-total-row">
                 <span>{t('payment.tax')}</span>
-                <span>4.000</span>
+                <span>{formatMoney(tax)}</span>
               </div>
               <div className="payment-total-row payment-net-total">
                 <span>{t('payment.netTotal')}</span>
-                <span>114.000</span>
+                <span>{formatMoney(netTotal)}</span>
               </div>
             </div>
 
             {error && <p className="login-error">{error}</p>}
 
-            <button type="submit" className="btn login-submit-btn w-100" disabled={submitting}>
+            <button
+              type="submit"
+              className="btn login-submit-btn w-100"
+              disabled={submitting || itemsLoading || items.length === 0}
+            >
               {submitting ? t('payment.submitting') : t('payment.confirm')}
             </button>
           </form>

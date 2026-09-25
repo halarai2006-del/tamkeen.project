@@ -5,6 +5,7 @@ import StoreNavbar from '../../components/StoreNavbar/StoreNavbar'
 import { getProduct } from '../../api/products'
 import { addItem } from '../../cart/cartService'
 import { useAuth } from '../../context/AuthContext'
+import { PLACEHOLDER_IMAGE, handleImageFallback } from '../../utils/placeholderImage'
 import borcelleLogo from '../../assets/images/borcelle-logo.png'
 import flagUk from '../../assets/images/icon.png'
 import blazerImage from '../../assets/images/image 30.png'
@@ -177,7 +178,11 @@ function ProductDetail({ onBrandClick, onProfileClick, onMessageClick, onOrdersC
                 onClick={() => setLightboxOpen(true)}
                 aria-label={t('productDetail.zoomImage')}
               >
-                <img src={galleryImages[activeImage]} alt={product.name} />
+                <img
+                  src={galleryImages[activeImage] || PLACEHOLDER_IMAGE}
+                  alt={product.name}
+                  onError={handleImageFallback}
+                />
               </button>
               {galleryImages.length > 1 && (
                 <div className="pd-gallery-thumbs">
@@ -189,7 +194,7 @@ function ProductDetail({ onBrandClick, onProfileClick, onMessageClick, onOrdersC
                       onClick={() => setActiveImage(index)}
                       aria-label={`${product.name} ${index + 1}`}
                     >
-                      <img src={img} alt="" />
+                      <img src={img} alt="" onError={handleImageFallback} />
                     </button>
                   ))}
                 </div>
@@ -386,10 +391,11 @@ function ProductDetail({ onBrandClick, onProfileClick, onMessageClick, onOrdersC
             <i className="bi bi-x-lg" aria-hidden="true" />
           </button>
           <img
-            src={galleryImages[activeImage]}
+            src={galleryImages[activeImage] || PLACEHOLDER_IMAGE}
             alt={product.name}
             className="pd-lightbox-image"
             onClick={(event) => event.stopPropagation()}
+            onError={handleImageFallback}
           />
         </div>
       )}

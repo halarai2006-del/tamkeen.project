@@ -15,3 +15,16 @@
   align-items: flex-start;
   padding-top: 12px;
 }
+
+.contact-status {
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.contact-status-success {
+  color: var(--bs-success);
+}
+
+.contact-status-error {
+  color: var(--brand-red);
+}

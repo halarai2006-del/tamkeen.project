@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import StoreNavbar from '../../components/StoreNavbar/StoreNavbar'
 import { useAuth } from '../../context/AuthContext'
-import { loadCartItems, removeItem as removeCartItem, updateItemQty } from '../../cart/cartService'
+import { loadCartLines, removeItem as removeCartItem, updateItemQty } from '../../cart/cartService'
+import { PLACEHOLDER_IMAGE, handleImageFallback } from '../../utils/placeholderImage'
 import borcelleLogo from '../../assets/images/borcelle-logo.png'
 import flagUk from '../../assets/images/icon.png'
 import tabletImage from '../../assets/images/image 32.png'
@@ -18,29 +19,6 @@ import '../Store/Store.css'
 import './Cart.css'
 
 const SAVED_FOR_LATER_IMAGES = [tabletImage, phoneImage, smartwatchImage, laptopImage]
-
-function normalizeCartLine(line) {
-  const product = line.product ?? line
-  return {
-    lineId: line.id,
-    productId: product.id ?? line.product_id,
-    name: product.name ?? line.name ?? '',
-    price: Number(product.price ?? line.price ?? 0),
-    image: product.image ?? line.image ?? '',
-    quantity: line.quantity ?? line.qty ?? 1,
-  }
-}
-
-function normalizeLocalLine(item) {
-  return {
-    lineId: null,
-    productId: item.productId,
-    name: item.name ?? '',
-    price: Number(item.price ?? 0),
-    image: item.image ?? '',
-    quantity: item.quantity,
-  }
-}
 
 const QTY_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
@@ -114,8 +92,7 @@ function Cart({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick, onB
     setCartLoading(true)
     setCartError('')
     try {
-      const rawItems = await loadCartItems(user)
-      setItems(user ? rawItems.map(normalizeCartLine) : rawItems.map(normalizeLocalLine))
+      setItems(await loadCartLines(user))
     } catch {
       setCartError(t('cartPage.loadError'))
     } finally {
@@ -213,7 +190,12 @@ function Cart({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick, onB
                     }
                     aria-label={item.name}
                   >
-                    <img src={item.image} alt={item.name} className="cart-item-thumb" />
+                    <img
+                      src={item.image || PLACEHOLDER_IMAGE}
+                      alt={item.name}
+                      className="cart-item-thumb"
+                      onError={handleImageFallback}
+                    />
                   </button>
 
                   <div className="cart-item-info">

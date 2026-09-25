@@ -1,9 +1,32 @@
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContentPage from '../../components/ContentPage/ContentPage'
+import { getSetting, SETTING_KEYS } from '../../api/settings'
 
 function Terms({ onBack, onBrandClick, onProfileClick, onMessageClick, onOrdersClick, onCartClick }) {
   const { t } = useTranslation()
-  const sections = t('terms.sections', { returnObjects: true })
+  const [loading, setLoading] = useState(true)
+  const [termsText, setTermsText] = useState('')
+
+  useEffect(() => {
+    let active = true
+    // The setting can be missing on the backend (404); the built-in text is shown then.
+    getSetting(SETTING_KEYS.termsAndConditions)
+      .then((setting) => {
+        if (active) setTermsText(setting?.value?.trim() ?? '')
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (active) setLoading(false)
+      })
+    return () => {
+      active = false
+    }
+  }, [])
+
+  const sections = termsText
+    ? [{ heading: t('terms.termsHeading'), body: termsText }]
+    : t('terms.sections', { returnObjects: true })
 
   return (
     <ContentPage
@@ -16,7 +39,9 @@ function Terms({ onBack, onBrandClick, onProfileClick, onMessageClick, onOrdersC
       onMessageClick={onMessageClick}
       onOrdersClick={onOrdersClick}
       onCartClick={onCartClick}
-    />
+    >
+      {loading ? <p className="content-page-text">{t('terms.loading')}</p> : undefined}
+    </ContentPage>
   )
 }
 

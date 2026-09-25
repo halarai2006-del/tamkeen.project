@@ -6,7 +6,12 @@
     "loadError": "Couldn't load your orders. Please try again.",
     "orderNumber": "Order #{{id}}",
     "item": "Item",
-    "total": "Total"
+    "total": "Total",
+    "cancel": "Cancel order",
+    "cancelReason": "Reason for cancelling",
+    "confirmCancel": "Confirm cancellation",
+    "keep": "Keep order",
+    "cancelError": "Couldn't cancel the order. Please try again."
   },
   "login": {
     "brand": "Borcelle",
@@ -61,8 +66,8 @@
     "message": "Message",
     "orders": "Orders",
     "cart": "My cart",
-    "itemName": "Smart Watches",
-    "itemDescription": "Special Backed Bread made in the oven",
+    "loadingItems": "Loading your order...",
+    "emptyCart": "Your cart is empty.",
     "total": "Total",
     "discount": "Discount",
     "tax": "Tax",
@@ -116,15 +121,19 @@
         "heading": "Acceptance of Terms",
         "body": "By using this application, you acknowledge that you have read, understood, and agree to fully comply with these terms. If you do not agree with these terms, please do not use the application. The application management reserves the right to modify these terms at any time, and you will be notified of updates when necessary."
       }
-    ]
+    ],
+    "loading": "Loading...",
+    "termsHeading": "Terms and conditions"
   },
   "contactUs": {
     "title": "Contact us page",
     "back": "Back",
-    "namePlaceholder": "Name...",
     "emailPlaceholder": "Email",
     "messagePlaceholder": "Write message",
-    "send": "Send"
+    "send": "Send",
+    "sending": "Sending...",
+    "sent": "Your message has been sent. Thank you!",
+    "sendError": "Couldn't send your message. Please try again."
   },
   "store": {
     "menu": "All category",
