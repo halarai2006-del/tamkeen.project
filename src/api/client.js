@@ -12,10 +12,6 @@ export function buildQuery(params = {}) {
   return query ? `?${query}` : ''
 }
 
-// The backend allows 60 requests per minute, and the home page alone needs ~6
-// (products and categories are paginated). Public catalog GETs are therefore
-// remembered for a minute, and identical in-flight requests share one call. A
-// page reload starts with an empty cache, so it always shows fresh data.
 const CATALOG_CACHE_MS = 60_000
 const catalogCache = new Map()
 
@@ -38,7 +34,6 @@ async function request(path, { method = 'GET', body, isFormData = false, auth = 
   const headers = { Accept: 'application/json' }
   if (!isFormData && body !== undefined) headers['Content-Type'] = 'application/json'
 
-  // The local demo session's token means nothing to the backend, so it is never sent.
   if (auth && !isDemoSession()) {
     const token = getToken()
     if (token) headers.Authorization = `Bearer ${token}`
@@ -63,9 +58,6 @@ async function request(path, { method = 'GET', body, isFormData = false, auth = 
   return data
 }
 
-// The backend paginates list endpoints (15 per page, and ignores per_page/limit),
-// so a plain GET only ever returns the first page. This follows meta.last_page
-// and returns every item. Endpoints that don't paginate just return their data.
 const MAX_PAGES = 20
 
 export async function apiFetchAllPages(path, params = {}, options = {}) {

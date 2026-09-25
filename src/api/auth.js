@@ -31,8 +31,6 @@ export function resendOtp(phone) {
 
 export async function verify(phone, otp) {
   if (isDemoOtp(otp)) {
-    // Demo mode: accept the fixed code for any phone number and start a local
-    // session instead of calling the real (training) backend. See src/utils/demoMode.js.
     startDemoSession(phone)
     return { data: { token: 'demo' } }
   }

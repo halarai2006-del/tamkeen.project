@@ -13,8 +13,6 @@ function saveLocalCart(items) {
   try {
     localStorage.setItem(LOCAL_CART_KEY, JSON.stringify(items))
   } catch {
-    // Ignore storage failures (e.g. private browsing / quota exceeded) —
-    // the caller still gets the updated items back for this render.
   }
   return items
 }

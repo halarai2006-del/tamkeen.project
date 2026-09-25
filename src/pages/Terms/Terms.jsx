@@ -10,7 +10,6 @@ function Terms({ onBack, onBrandClick, onProfileClick, onMessageClick, onOrdersC
 
   useEffect(() => {
     let active = true
-    // The setting can be missing on the backend (404); the built-in text is shown then.
     getSetting(SETTING_KEYS.termsAndConditions)
       .then((setting) => {
         if (active) setTermsText(setting?.value?.trim() ?? '')

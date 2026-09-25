@@ -1,10 +1,3 @@
-// The home page tiles from the original Figma design (image, title, "From" price,
-// discount badge). Each tile lists the backend category names it stands for in
-// `apiNames`. When the backend has a matching category that holds products, the
-// tile goes live: its "From" price becomes the cheapest real product price and
-// clicking it opens that category. Tiles with no backend match keep the design
-// values, so adding a category with the same name on the backend later is enough
-// to connect them.
 import chairImage from '../../assets/images/1.png'
 import blackPhoneImage from '../../assets/images/3.png'
 import gamingSetImage from '../../assets/images/5.png'
@@ -54,8 +47,6 @@ export const CONSUMER_TILES = [
   { key: 'consumer-phones-black', titleKey: 'store.items.smartphones', image: blackPhoneImage, apiNames: PHONE_CATEGORIES, price: 199 },
 ]
 
-// Adds `categoryIds` (backend categories the tile opens; empty when the tile is
-// design-only) and, for live tiles, the real cheapest `price`.
 export function resolveTile(tile, categories, products) {
   const wanted = tile.apiNames.map((name) => name.toLowerCase())
   const categoryIds = categories

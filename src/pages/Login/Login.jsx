@@ -21,8 +21,6 @@ function Login({ onSubmit, onClose }) {
       await login(phone.trim())
     } catch (err) {
       console.error(err)
-      // Don't block navigation here: the fixed demo code on the next screen
-      // can still complete sign-in even when this phone isn't backend-registered.
     } finally {
       setLoading(false)
     }

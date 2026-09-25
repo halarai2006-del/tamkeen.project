@@ -82,8 +82,6 @@ function Cart({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick, onB
   const [coupon, setCoupon] = useState('')
   const [selectedThumbIndex, setSelectedThumbIndex] = useState(null)
   const [selectedSavedIndex, setSelectedSavedIndex] = useState(null)
-  // Lines currently mid-update (by lineId/productId), so a second click on the
-  // same row while a request is in flight is ignored instead of racing it.
   const [pendingKeys, setPendingKeys] = useState(() => new Set())
 
   const perks = t('cartPage.perks', { returnObjects: true })
@@ -103,7 +101,6 @@ function Cart({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick, onB
   useEffect(() => {
     if (authLoading) return
     loadCart()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, authLoading])
 
   const removeItem = async (item) => {

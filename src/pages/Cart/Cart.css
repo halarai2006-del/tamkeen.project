@@ -251,7 +251,6 @@ html[dir='rtl'] .cart-back-btn i {
   white-space: nowrap;
 }
 
-/* Order summary */
 .cart-summary {
   border: 1px solid var(--bs-border-color);
   padding: 20px;
@@ -347,7 +346,6 @@ html[dir='rtl'] .cart-back-btn i {
   object-fit: contain;
 }
 
-/* Saved for later */
 .cart-saved-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

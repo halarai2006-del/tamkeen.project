@@ -68,7 +68,6 @@ const FOOTER_COLUMNS = [
 const RATING_TIERS = [5, 4, 3, 2]
 const PAGE_SIZES = [10, 20, 50]
 
-// The home page opens this page with ?category=8,9,14 to pre-select categories.
 function parseCategoryIds(value) {
   return (value ?? '')
     .split(',')

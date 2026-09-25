@@ -138,7 +138,6 @@ function Store({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick, on
     setSelectedProductKey((current) => (current === key ? null : key))
   }
 
-  // Tiles matching a backend category open it; design-only tiles just highlight.
   const handleTileClick = (tile) => {
     if (tile.categoryIds.length > 0) onCategoryClick?.(tile.categoryIds)
     else toggleProductSelect(tile.key)
@@ -149,7 +148,6 @@ function Store({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick, on
     { key: 'home-outdoor', titleKey: 'store.homeOutdoor', banner: homeOutdoorBanner, tiles: resolveTiles(HOME_OUTDOOR_TILES, categories, products) },
     { key: 'consumer', titleKey: 'store.consumerElectronics', banner: consumerBanner, tiles: resolveTiles(CONSUMER_TILES, categories, products) },
   ]
-  // Products without a photo are left out of this preview so it isn't full of blank boxes.
   const recommendedProducts = products.filter((product) => product.image).slice(0, 10)
 
   const handleInquirySubmit = (event) => {

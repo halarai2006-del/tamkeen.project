@@ -1,13 +1,3 @@
-// Demo mode: lets the checkout flow be completed without a real, backend-registered
-// phone number. This project talks to a shared training API (see src/api/config.js)
-// that only accepts a closed list of phone numbers, so a normal OTP login can't be
-// relied on for a live presentation.
-//
-// Typing ANY phone number on the login screen, followed by the fixed code below on
-// the verification screen, starts a fully local "demo session": the profile, cart,
-// addresses and orders for that session are kept in this browser's storage instead
-// of being sent to the real backend. Product/category browsing is unaffected and
-// still comes from the real backend, so the store still shows real catalog data.
 import { setToken, getToken } from '../api/token'
 
 export const DEMO_OTP = '11111'
@@ -31,8 +21,6 @@ function writeJson(key, value) {
   try {
     localStorage.setItem(key, JSON.stringify(value))
   } catch {
-    // Ignore storage failures (e.g. private browsing / quota exceeded) — the
-    // in-memory value is still returned to the caller below.
   }
   return value
 }
@@ -60,8 +48,6 @@ export function endDemoSession() {
   writeJson(DEMO_ORDERS_KEY, [])
 }
 
-// ---- profile ----
-
 export function getDemoProfile() {
   return readJson(DEMO_PROFILE_KEY, { name: '', email: '', phone: '', image: null })
 }
@@ -70,8 +56,6 @@ export function saveDemoProfile(patch) {
   const current = getDemoProfile()
   return writeJson(DEMO_PROFILE_KEY, { ...current, ...patch })
 }
-
-// ---- cart ----
 
 export function getDemoCart() {
   return readJson(DEMO_CART_KEY, [])
@@ -107,8 +91,6 @@ export function updateDemoCartQty(lineId, quantity) {
   return writeJson(DEMO_CART_KEY, items)
 }
 
-// ---- addresses ----
-
 export function getDemoAddresses() {
   return readJson(DEMO_ADDRESSES_KEY, [])
 }
@@ -119,8 +101,6 @@ export function addDemoAddress(data) {
   writeJson(DEMO_ADDRESSES_KEY, [...addresses, created])
   return created
 }
-
-// ---- orders ----
 
 export function getDemoOrders() {
   return readJson(DEMO_ORDERS_KEY, [])

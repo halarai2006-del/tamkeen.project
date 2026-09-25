@@ -4,7 +4,6 @@ import StoreNavbar from '../../components/StoreNavbar/StoreNavbar'
 import { getOrders, cancelOrder } from '../../api/orders'
 import './Orders.css'
 
-// Orders already in one of these states can't be cancelled any more.
 function isCancellable(order) {
   return !/cancel|deliver|complet|reject/i.test(String(order.status ?? ''))
 }

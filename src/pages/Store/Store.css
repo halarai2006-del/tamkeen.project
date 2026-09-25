@@ -977,7 +977,6 @@
   border-radius: 2px;
 }
 
-/* Shared "Super discount" banner (Product Detail, Cart, ...) */
 .store-discount-banner {
   display: flex;
   align-items: center;

@@ -90,10 +90,6 @@ function Verify({ phone, onBack, onResend, onSubmit }) {
     if (loading) return
     const otp = code.join('')
 
-    // The phone number lives in the previous screen's local state, which is
-    // lost on a page refresh or a direct visit to this URL. A real backend
-    // verification can't succeed without it — but the fixed demo code doesn't
-    // need a real phone, so only block the real-backend path here.
     if (!phone && !isDemoOtp(otp)) {
       setError(t('verify.missingSession'))
       return
@@ -110,11 +106,7 @@ function Verify({ phone, onBack, onResend, onSubmit }) {
       return
     }
 
-    // The code was accepted at this point, so anything below is best-effort:
-    // its failure must not be reported back to the user as an invalid code.
     try {
-      // Load the now-authenticated profile so the rest of the app (cart,
-      // address, payment) immediately treats this session as logged in.
       await refreshUser()
     } catch (err) {
       console.error(err)

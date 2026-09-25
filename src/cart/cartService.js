@@ -1,5 +1,3 @@
-// Single place that decides "server cart (logged in) vs. local guest cart"
-// so Cart.jsx and ProductDetail.jsx don't each re-implement the same branch.
 import { getCart, addToCart, removeCartLine, updateCartQty } from '../api/cart'
 import { pickProductImages } from '../api/normalize'
 import { getLocalCart, addLocalItem, updateLocalQty, removeLocalItem } from './localCart'
@@ -16,7 +14,6 @@ function normalizeServerLine(line) {
     productId: product.id ?? line.product_id,
     name: product.name ?? line.name ?? '',
     price: Number(product.price ?? line.price ?? 0),
-    // `line.id` is the cart line's id, not the product's, so it must not pick a stand-in photo.
     image: pickProductImages(product).image || pickProductImages({ ...line, id: product.id }).image,
     quantity: line.quantity ?? line.qty ?? 1,
   }
@@ -33,8 +30,6 @@ function normalizeLocalLine(item) {
   }
 }
 
-// Cart lines in one shape ({ lineId, productId, name, price, image, quantity })
-// whether they came from the server cart or the local guest cart.
 export async function loadCartLines(user) {
   const rawItems = await loadCartItems(user)
   return rawItems.map(user ? normalizeServerLine : normalizeLocalLine)
