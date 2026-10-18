@@ -72,7 +72,7 @@ const FOOTER_COLUMNS = [
 ]
 
 function ProductDetail({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick, onCartClick }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { id } = useParams()
   const { user } = useAuth()
   const [product, setProduct] = useState(null)
@@ -120,6 +120,10 @@ function ProductDetail({ onBrandClick, onProfileClick, onMessageClick, onOrdersC
   }, [id, t])
 
   const galleryImages = product ? [product.image, ...(product.images ?? [])].filter(Boolean) : []
+
+  const detailsKey = `productDetail.catalog.${product?.id}`
+  const details = product && i18n.exists(detailsKey) ? t(detailsKey, { returnObjects: true }) : {}
+  const description = details.description || product?.description
 
   const handleAddToCart = async () => {
     if (!product || addingToCart) return
@@ -214,7 +218,7 @@ function ProductDetail({ onBrandClick, onProfileClick, onMessageClick, onOrdersC
                 </div>
               </div>
 
-              {product.description && <p className="pd-description-preview">{product.description}</p>}
+              {description && <p className="pd-description-preview">{description}</p>}
             </div>
 
             <div className="pd-buybox-wrap">
@@ -257,7 +261,31 @@ function ProductDetail({ onBrandClick, onProfileClick, onMessageClick, onOrdersC
 
               <div className="pd-description">
                 {activeTab === 'description' && (
-                  <p className="pd-description-full">{product.description || t('productDetail.noDescription')}</p>
+                  <>
+                    <p className="pd-description-full">{description || t('productDetail.noDescription')}</p>
+
+                    {details.specs?.length > 0 && (
+                      <dl className="pd-specs">
+                        {details.specs.map((spec) => (
+                          <div className="pd-specs-row" key={spec.label}>
+                            <dt>{spec.label}</dt>
+                            <dd>{spec.value}</dd>
+                          </div>
+                        ))}
+                      </dl>
+                    )}
+
+                    {details.features?.length > 0 && (
+                      <ul className="pd-features">
+                        {details.features.map((feature) => (
+                          <li key={feature}>
+                            <i className="bi bi-check2" aria-hidden="true" />
+                            {feature}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </>
                 )}
                 {activeTab !== 'description' && (
                   <p className="pd-description-full">{t(`productDetail.tabPlaceholders.${activeTab}`)}</p>

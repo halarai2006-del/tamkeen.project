@@ -369,6 +369,7 @@
 .pd-specs-row dt {
   flex: 0 0 160px;
   padding: 10px 16px;
+  font-weight: 400;
   color: var(--bs-secondary-color);
   background-color: var(--bs-tertiary-bg, #f7f7f8);
 }
@@ -583,6 +584,10 @@
 
   .pd-gallery-thumbs {
     grid-template-columns: repeat(4, 1fr);
+  }
+
+  .pd-specs-row dt {
+    flex-basis: 120px;
   }
 
   .pd-description-toggle {

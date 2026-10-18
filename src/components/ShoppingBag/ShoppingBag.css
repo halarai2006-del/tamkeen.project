@@ -5,17 +5,15 @@
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;
-  padding: 80px 24px 24px;
   z-index: 1000;
 }
 
 .shopping-bag-panel {
   width: 100%;
   max-width: 400px;
-  max-height: calc(100svh - 104px);
+  max-height: 100svh;
   background-color: var(--bs-body-bg);
-  border-radius: 12px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.2);
   padding: 24px;
   display: flex;
   flex-direction: column;
@@ -44,7 +42,20 @@
   padding: 4px;
 }
 
+.shopping-bag-status {
+  font-size: 0.9rem;
+  color: var(--bs-secondary-color);
+  margin: 0 0 16px;
+}
+
+.shopping-bag-error {
+  color: var(--brand-red);
+}
+
 .shopping-bag-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
@@ -67,13 +78,12 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  overflow: hidden;
 }
 
 .shopping-bag-item-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .shopping-bag-item-qty-badge {
@@ -131,6 +141,11 @@
   justify-content: center;
   padding: 0;
   line-height: 1;
+}
+
+.shopping-bag-step-btn:disabled,
+.shopping-bag-remove-btn:disabled {
+  opacity: 0.4;
 }
 
 .shopping-bag-item-stepper span {

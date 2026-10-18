@@ -17,12 +17,18 @@ const SECONDARY_LINKS = [
 const PLAIN_LINKS = ['userAgreement', 'partnership', 'privacyPolicy']
 
 function MobileMenu({ onClose, onHomeClick, onCategoriesClick, onContactUsClick }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+
+  const otherLanguage = i18n.language === 'ar' ? 'en' : 'ar'
 
   const handlers = {
     home: onHomeClick,
     categories: onCategoriesClick,
     contactUs: onContactUsClick,
+    languageCurrency: () => {
+      i18n.changeLanguage(otherLanguage)
+      onClose()
+    },
   }
 
   return (

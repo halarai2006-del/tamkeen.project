@@ -27,8 +27,13 @@ export function removeCartLine(lineId) {
   return apiFetch(`/cart/${lineId}`, { method: 'DELETE' })
 }
 
-export async function updateCartQty(lineId, productId, quantity) {
+export async function updateCartQty(lineId, productId, quantity, previousQuantity) {
   if (isDemoSession()) return updateDemoCartQty(lineId, quantity)
   await removeCartLine(lineId)
-  return addToCart(productId, quantity)
+  try {
+    return await addToCart(productId, quantity)
+  } catch (error) {
+    await addToCart(productId, previousQuantity).catch(() => {})
+    throw error
+  }
 }

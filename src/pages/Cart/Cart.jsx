@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import StoreNavbar from '../../components/StoreNavbar/StoreNavbar'
-import { useAuth } from '../../context/AuthContext'
-import { loadCartLines, removeItem as removeCartItem, updateItemQty } from '../../cart/cartService'
+import { useCartLines } from '../../cart/useCartLines'
+import { formatMoney } from '../../utils/formatMoney'
 import { PLACEHOLDER_IMAGE, handleImageFallback } from '../../utils/placeholderImage'
 import borcelleLogo from '../../assets/images/borcelle-logo.png'
 import flagUk from '../../assets/images/icon.png'
@@ -75,79 +75,24 @@ const FOOTER_COLUMNS = [
 
 function Cart({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick, onBackToShop, onCheckout }) {
   const { t } = useTranslation()
-  const { user, loading: authLoading } = useAuth()
-  const [items, setItems] = useState([])
-  const [cartLoading, setCartLoading] = useState(true)
-  const [cartError, setCartError] = useState('')
+  const {
+    items,
+    loading: cartLoading,
+    error: cartError,
+    subtotal,
+    lineKey,
+    isPending,
+    setQty,
+    stepQty,
+    removeLine,
+    removeAll,
+  } = useCartLines()
   const [coupon, setCoupon] = useState('')
   const [selectedThumbIndex, setSelectedThumbIndex] = useState(null)
   const [selectedSavedIndex, setSelectedSavedIndex] = useState(null)
-  const [pendingKeys, setPendingKeys] = useState(() => new Set())
 
   const perks = t('cartPage.perks', { returnObjects: true })
 
-  const loadCart = async () => {
-    setCartLoading(true)
-    setCartError('')
-    try {
-      setItems(await loadCartLines(user))
-    } catch {
-      setCartError(t('cartPage.loadError'))
-    } finally {
-      setCartLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    if (authLoading) return
-    loadCart()
-  }, [user, authLoading])
-
-  const removeItem = async (item) => {
-    try {
-      await removeCartItem(user, item)
-    } catch (err) {
-      console.error(err)
-      setCartError(t('cartPage.loadError'))
-    } finally {
-      loadCart()
-    }
-  }
-
-  const removeAllItems = async () => {
-    try {
-      await Promise.all(items.map((item) => removeCartItem(user, item)))
-    } catch (err) {
-      console.error(err)
-      setCartError(t('cartPage.loadError'))
-    } finally {
-      loadCart()
-    }
-  }
-
-  const updateQty = async (item, value) => {
-    const key = item.lineId ?? item.productId
-    if (pendingKeys.has(key)) return
-    const quantity = Number(value)
-    setPendingKeys((current) => new Set(current).add(key))
-    try {
-      await updateItemQty(user, item, quantity)
-    } catch (err) {
-      console.error(err)
-      setCartError(t('cartPage.loadError'))
-    } finally {
-      setPendingKeys((current) => {
-        const next = new Set(current)
-        next.delete(key)
-        return next
-      })
-      loadCart()
-    }
-  }
-
-  const stepQty = (item, delta) => updateQty(item, Math.max(1, item.quantity + delta))
-
-  const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
   const discount = 0
   const tax = 0
   const total = subtotal - discount + tax
@@ -176,9 +121,9 @@ function Cart({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick, onB
           <div className="cart-items-col">
             <ul className="cart-items-list">
               {!cartLoading && items.map((item) => {
-                const isPending = pendingKeys.has(item.lineId ?? item.productId)
+                const itemPending = isPending(item)
                 return (
-                <li className="cart-item" key={item.lineId ?? item.productId}>
+                <li className="cart-item" key={lineKey(item)}>
                   <button
                     type="button"
                     className={`cart-item-thumb-btn ${selectedThumbIndex === item.productId ? 'is-selected' : ''}`}
@@ -198,20 +143,20 @@ function Cart({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick, onB
                   <div className="cart-item-info">
                     <span className="cart-item-title">{item.name}</span>
                     <div className="cart-item-actions">
-                      <button type="button" className="cart-item-action" onClick={() => removeItem(item)}>
+                      <button type="button" className="cart-item-action" onClick={() => removeLine(item)}>
                         {t('cartPage.remove')}
                       </button>
                     </div>
                   </div>
 
                   <div className="cart-item-price-col">
-                    <span className="cart-item-price">${item.price.toFixed(2)}</span>
+                    <span className="cart-item-price">{formatMoney(item.price)}</span>
                     <select
                       className="form-select form-select-sm cart-item-qty"
                       value={item.quantity}
-                      onChange={(event) => updateQty(item, event.target.value)}
+                      onChange={(event) => setQty(item, Number(event.target.value))}
                       aria-label={t('cartPage.qty', { count: item.quantity })}
-                      disabled={isPending}
+                      disabled={itemPending}
                     >
                       {QTY_OPTIONS.map((qty) => (
                         <option key={qty} value={qty}>
@@ -225,12 +170,12 @@ function Cart({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick, onB
                         type="button"
                         onClick={() => stepQty(item, -1)}
                         aria-label="-"
-                        disabled={isPending || item.quantity <= 1}
+                        disabled={itemPending || item.quantity <= 1}
                       >
                         -
                       </button>
                       <span>{item.quantity}</span>
-                      <button type="button" onClick={() => stepQty(item, 1)} aria-label="+" disabled={isPending}>
+                      <button type="button" onClick={() => stepQty(item, 1)} aria-label="+" disabled={itemPending}>
                         +
                       </button>
                     </div>
@@ -248,7 +193,7 @@ function Cart({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick, onB
               <button
                 type="button"
                 className="cart-remove-all"
-                onClick={removeAllItems}
+                onClick={removeAll}
               >
                 {t('cartPage.removeAll')}
               </button>
@@ -287,21 +232,21 @@ function Cart({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick, onB
             <div className="cart-summary-totals">
               <div className="cart-summary-row">
                 <span>{t('cartPage.summary.subtotal')}</span>
-                <span>${subtotal.toFixed(2)}</span>
+                <span>{formatMoney(subtotal)}</span>
               </div>
               <div className="cart-summary-row">
                 <span>{t('cartPage.summary.discount')}</span>
-                <span>-${discount.toFixed(2)}</span>
+                <span>-{formatMoney(discount)}</span>
               </div>
               <div className="cart-summary-row">
                 <span>{t('cartPage.summary.tax')}</span>
-                <span>+${tax.toFixed(2)}</span>
+                <span>+{formatMoney(tax)}</span>
               </div>
             </div>
 
             <div className="cart-summary-total-row">
               <span>{t('cartPage.summary.total')}</span>
-              <span className="cart-summary-total-value">${total.toFixed(2)}</span>
+              <span className="cart-summary-total-value">{formatMoney(total)}</span>
             </div>
 
             <button

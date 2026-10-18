@@ -46,6 +46,6 @@ export async function removeItem(user, item) {
 }
 
 export async function updateItemQty(user, item, quantity) {
-  if (user) return updateCartQty(item.lineId, item.productId, quantity)
+  if (user) return updateCartQty(item.lineId, item.productId, quantity, item.quantity)
   return updateLocalQty(item.productId, quantity)
 }

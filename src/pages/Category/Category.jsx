@@ -118,7 +118,7 @@ function FilterSection({ title, seeAllLabel, children }) {
 }
 
 function Category({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick, onCartClick, onProductClick }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [apiCategories, setApiCategories] = useState([])
   const [searchParams] = useSearchParams()
   const [activeCategoryIds, setActiveCategoryIds] = useState(() => parseCategoryIds(searchParams.get('category')))
@@ -152,7 +152,7 @@ function Category({ onBrandClick, onProfileClick, onMessageClick, onOrdersClick,
     getCategories()
       .then(setApiCategories)
       .catch(() => {})
-  }, [])
+  }, [i18n.language])
 
   useEffect(() => {
     let cancelled = false

@@ -4,7 +4,7 @@ import ContentPage from '../../components/ContentPage/ContentPage'
 import { getSetting, SETTING_KEYS } from '../../api/settings'
 
 function Terms({ onBack, onBrandClick, onProfileClick, onMessageClick, onOrdersClick, onCartClick }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [loading, setLoading] = useState(true)
   const [termsText, setTermsText] = useState('')
 
@@ -21,7 +21,7 @@ function Terms({ onBack, onBrandClick, onProfileClick, onMessageClick, onOrdersC
     return () => {
       active = false
     }
-  }, [])
+  }, [i18n.language])
 
   const sections = termsText
     ? [{ heading: t('terms.termsHeading'), body: termsText }]

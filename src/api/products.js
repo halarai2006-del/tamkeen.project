@@ -1,5 +1,6 @@
 import { apiFetch, apiFetchAllPages, buildQuery } from './client'
 import { normalizeProduct } from './normalize'
+import { isProductVisible } from './hiddenCatalog'
 
 function toApiParams(params) {
   return {
@@ -13,7 +14,7 @@ function toApiParams(params) {
 }
 
 function toProductList(items) {
-  return (items ?? []).map(normalizeProduct).filter((product) => product.name)
+  return (items ?? []).map(normalizeProduct).filter((product) => product.name && isProductVisible(product))
 }
 
 export async function getProducts(params = {}) {
@@ -32,5 +33,7 @@ export async function getAllProducts(params = {}) {
 
 export async function getProduct(id) {
   const result = await apiFetch(`/product/${id}`, { auth: false })
-  return normalizeProduct(result?.data ?? null)
+  const product = normalizeProduct(result?.data ?? null)
+  if (product && !isProductVisible(product)) throw new Error('Product is not available')
+  return product
 }

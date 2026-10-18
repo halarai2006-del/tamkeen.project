@@ -1,3 +1,4 @@
+import i18n from '../i18n'
 import { API_BASE_URL } from './config'
 import { getToken } from './token'
 import { isDemoSession } from '../utils/demoMode'
@@ -19,19 +20,20 @@ export function apiFetch(path, options = {}) {
   const { method = 'GET', auth = true } = options
   if (method !== 'GET' || auth) return request(path, options)
 
-  const cached = catalogCache.get(path)
+  const cacheKey = `${i18n.language}:${path}`
+  const cached = catalogCache.get(cacheKey)
   if (cached && Date.now() - cached.time < CATALOG_CACHE_MS) return cached.promise
 
   const promise = request(path, options).catch((error) => {
-    catalogCache.delete(path)
+    catalogCache.delete(cacheKey)
     throw error
   })
-  catalogCache.set(path, { promise, time: Date.now() })
+  catalogCache.set(cacheKey, { promise, time: Date.now() })
   return promise
 }
 
 async function request(path, { method = 'GET', body, isFormData = false, auth = true } = {}) {
-  const headers = { Accept: 'application/json' }
+  const headers = { Accept: 'application/json', 'Accept-Language': i18n.language }
   if (!isFormData && body !== undefined) headers['Content-Type'] = 'application/json'
 
   if (auth && !isDemoSession()) {

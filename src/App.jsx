@@ -138,7 +138,7 @@ function AppRoutes() {
             onBrandClick={() => navigate('/')}
             onBack={() => navigate(-1)}
             onProfileClick={() => navigate('/account')}
-            onCartClick={() => navigate('/payment')}
+            onCartClick={() => navigate('/cart')}
           />
         }
       />
@@ -149,7 +149,7 @@ function AppRoutes() {
             onBrandClick={() => navigate('/')}
             onBack={() => navigate(-1)}
             onProfileClick={() => navigate('/account')}
-            onCartClick={() => navigate('/payment')}
+            onCartClick={() => navigate('/cart')}
           />
         }
       />

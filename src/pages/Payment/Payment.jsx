@@ -6,6 +6,7 @@ import { getAddresses, createAddress } from '../../api/address'
 import { createOrder } from '../../api/orders'
 import { getCart, removeCartLine } from '../../api/cart'
 import { loadCartLines } from '../../cart/cartService'
+import { formatMoney } from '../../utils/formatMoney'
 import { PLACEHOLDER_IMAGE, handleImageFallback } from '../../utils/placeholderImage'
 import storefrontImage from '../../assets/images/login-storefront.png'
 import syriatelLogo from '../../assets/images/syriatel-logo.png'
@@ -19,8 +20,6 @@ const PAYMENT_METHODS = [
   { id: 'syriatel', labelKey: 'payment.syriatel', image: syriatelLogo },
   { id: 'mtn', labelKey: 'payment.mtn', image: mtnLogo },
 ]
-
-const formatMoney = (amount) => `$${amount.toFixed(2)}`
 
 async function ensureAddressId(user) {
   const addresses = await getAddresses()
@@ -42,7 +41,7 @@ async function ensureAddressId(user) {
 }
 
 function Payment({ onConfirm, onBrandClick, onProfileClick, onBack }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { user, loading: authLoading } = useAuth()
   const [method, setMethod] = useState('cash')
   const [discountCode, setDiscountCode] = useState('')
@@ -72,7 +71,7 @@ function Payment({ onConfirm, onBrandClick, onProfileClick, onBack }) {
     return () => {
       cancelled = true
     }
-  }, [user, authLoading])
+  }, [user, authLoading, i18n.language])
 
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
   const discount = 0

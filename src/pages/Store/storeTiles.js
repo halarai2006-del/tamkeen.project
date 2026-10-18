@@ -15,43 +15,41 @@ import kettleImage from '../../assets/images/image 85.png'
 import tabletImage from '../../assets/images/image 32.png'
 import redPhoneImage from '../../assets/images/image 33.png'
 
-const LAPTOP_CATEGORIES = ['MacBook', 'Chromebooks', 'Windows PCs', 'Mac pc']
-const PHONE_CATEGORIES = ['mobile phone']
+const CATEGORY_IDS = { chromebooks: 8, macBook: 9, headphones: 12, windowsPcs: 14, macPc: 15, tablets: 16 }
+const LAPTOP_CATEGORY_IDS = [CATEGORY_IDS.macBook, CATEGORY_IDS.chromebooks, CATEGORY_IDS.windowsPcs, CATEGORY_IDS.macPc]
 
 export const DEAL_TILES = [
-  { key: 'deal-laptops', titleKey: 'store.items.laptopsPc', image: laptopImage, apiNames: LAPTOP_CATEGORIES, discount: '-15%' },
-  { key: 'deal-cameras', titleKey: 'store.items.cameras', image: cameraImage, apiNames: ['Cameras'], discount: '-25%' },
-  { key: 'deal-gaming', titleKey: 'store.items.gamingSet', image: gamingSetImage, apiNames: ['Gaming Accessories'], discount: '-25%' },
-  { key: 'deal-phones', titleKey: 'store.items.smartphones', image: blackPhoneImage, apiNames: PHONE_CATEGORIES, discount: '-25%' },
+  { key: 'deal-laptops', titleKey: 'store.items.laptopsPc', image: laptopImage, apiCategoryIds: LAPTOP_CATEGORY_IDS, discount: '-15%' },
+  { key: 'deal-cameras', titleKey: 'store.items.cameras', image: cameraImage, discount: '-25%' },
+  { key: 'deal-gaming', titleKey: 'store.items.gamingSet', image: gamingSetImage, discount: '-25%' },
+  { key: 'deal-phones', titleKey: 'store.items.smartphones', image: blackPhoneImage, discount: '-25%' },
 ]
 
 export const HOME_OUTDOOR_TILES = [
-  { key: 'home-chairs', titleKey: 'store.items.softChairs', image: chairImage, apiNames: ['Soft chairs'], price: 19 },
-  { key: 'home-lamps', titleKey: 'store.items.tableLamps', image: tableLampImage, apiNames: ['Table lamps'], price: 19 },
-  { key: 'home-mattress', titleKey: 'store.items.airMattress', image: airMattressImage, apiNames: ['Air mattress'], price: 19 },
-  { key: 'home-dishes', titleKey: 'store.items.kitchenDishes', image: potImage, apiNames: ['Kitchen dishes'], price: 19 },
-  { key: 'home-mixer', titleKey: 'store.items.kitchenMixer', image: kitchenMixerImage, apiNames: ['Kitchen mixer'], price: 100 },
-  { key: 'home-coffee', titleKey: 'store.items.coffeeMaker', image: coffeeMakerImage, apiNames: ['Coffee maker'], price: 39 },
-  { key: 'home-appliance', titleKey: 'store.items.homeAppliance', image: homeApplianceImage, apiNames: ['Home appliance'], price: 19 },
-  { key: 'home-plants', titleKey: 'store.items.homePlants', image: plantImage, apiNames: ['Home plants'], price: 15 },
+  { key: 'home-chairs', titleKey: 'store.items.softChairs', image: chairImage, price: 19 },
+  { key: 'home-lamps', titleKey: 'store.items.tableLamps', image: tableLampImage, price: 19 },
+  { key: 'home-mattress', titleKey: 'store.items.airMattress', image: airMattressImage, price: 19 },
+  { key: 'home-dishes', titleKey: 'store.items.kitchenDishes', image: potImage, price: 19 },
+  { key: 'home-mixer', titleKey: 'store.items.kitchenMixer', image: kitchenMixerImage, price: 100 },
+  { key: 'home-coffee', titleKey: 'store.items.coffeeMaker', image: coffeeMakerImage, price: 39 },
+  { key: 'home-appliance', titleKey: 'store.items.homeAppliance', image: homeApplianceImage, price: 19 },
+  { key: 'home-plants', titleKey: 'store.items.homePlants', image: plantImage, price: 15 },
 ]
 
 export const CONSUMER_TILES = [
-  { key: 'consumer-cameras', titleKey: 'store.items.cameras', image: cameraImage, apiNames: ['Cameras'], price: 89 },
-  { key: 'consumer-headphones', titleKey: 'store.items.headphones', image: headphonesImage, apiNames: ['Headphones'], price: 10 },
-  { key: 'consumer-kettle', titleKey: 'store.items.electricKettle', image: kettleImage, apiNames: ['Electric kettle'], price: 90 },
-  { key: 'consumer-gaming', titleKey: 'store.items.gamingSet', image: gamingSetImage, apiNames: ['Gaming Accessories'], price: 35 },
-  { key: 'consumer-laptops', titleKey: 'store.items.laptopsPc', image: laptopImage, apiNames: LAPTOP_CATEGORIES, price: 340 },
-  { key: 'consumer-tablets', titleKey: 'store.items.tablets', image: tabletImage, apiNames: ['Tablets'], price: 19 },
-  { key: 'consumer-phones-red', titleKey: 'store.items.smartphones', image: redPhoneImage, apiNames: PHONE_CATEGORIES, price: 240 },
-  { key: 'consumer-phones-black', titleKey: 'store.items.smartphones', image: blackPhoneImage, apiNames: PHONE_CATEGORIES, price: 199 },
+  { key: 'consumer-cameras', titleKey: 'store.items.cameras', image: cameraImage, price: 89 },
+  { key: 'consumer-headphones', titleKey: 'store.items.headphones', image: headphonesImage, apiCategoryIds: [CATEGORY_IDS.headphones], price: 10 },
+  { key: 'consumer-kettle', titleKey: 'store.items.electricKettle', image: kettleImage, price: 90 },
+  { key: 'consumer-gaming', titleKey: 'store.items.gamingSet', image: gamingSetImage, price: 35 },
+  { key: 'consumer-laptops', titleKey: 'store.items.laptopsPc', image: laptopImage, apiCategoryIds: LAPTOP_CATEGORY_IDS, price: 340 },
+  { key: 'consumer-tablets', titleKey: 'store.items.tablets', image: tabletImage, apiCategoryIds: [CATEGORY_IDS.tablets], price: 19 },
+  { key: 'consumer-phones-red', titleKey: 'store.items.smartphones', image: redPhoneImage, price: 240 },
+  { key: 'consumer-phones-black', titleKey: 'store.items.smartphones', image: blackPhoneImage, price: 199 },
 ]
 
 export function resolveTile(tile, categories, products) {
-  const wanted = tile.apiNames.map((name) => name.toLowerCase())
-  const categoryIds = categories
-    .filter((category) => wanted.includes(category.name.toLowerCase()))
-    .map((category) => category.id)
+  const wanted = tile.apiCategoryIds ?? []
+  const categoryIds = categories.map((category) => category.id).filter((id) => wanted.includes(id))
 
   const prices = products
     .filter((product) => categoryIds.includes(product.category?.id))

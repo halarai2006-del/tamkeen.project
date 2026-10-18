@@ -385,6 +385,458 @@
     "addingToCart": "Adding...",
     "addedToCart": "Added to cart",
     "addToCartError": "Couldn't add this item to your cart.",
+    "catalog": {
+      "8": {
+        "specs": [
+          { "label": "Brand", "value": "Apple" },
+          { "label": "Model", "value": "MacBook Air 13-inch (M4)" },
+          { "label": "Processor", "value": "Apple M4, 10-core CPU" },
+          { "label": "Display", "value": "13.6-inch Liquid Retina" },
+          { "label": "Memory & storage", "value": "16GB unified memory, 256GB SSD" }
+        ],
+        "features": [
+          "Brilliant Liquid Retina display",
+          "Comfortable keyboard and large, responsive trackpad",
+          "Silent, fanless design",
+          "Up to 18 hours of battery life"
+        ]
+      },
+      "9": {
+        "specs": [
+          { "label": "Brand", "value": "Apple" },
+          { "label": "Model", "value": "MacBook Air 15-inch (M4)" },
+          { "label": "Processor", "value": "Apple M4, 10-core CPU" },
+          { "label": "Display", "value": "15.3-inch Liquid Retina" },
+          { "label": "Ports", "value": "Two Thunderbolt 4 ports and MagSafe 3" }
+        ],
+        "features": [
+          "100% recycled aluminum enclosure",
+          "Six-speaker sound system with Spatial Audio",
+          "12MP Center Stage camera for clear video calls",
+          "Up to 18 hours of battery life"
+        ]
+      },
+      "11": {
+        "specs": [
+          { "label": "Brand", "value": "Samsung" },
+          { "label": "Model", "value": "Galaxy S26 Ultra" },
+          { "label": "Display", "value": "6.9-inch Dynamic AMOLED 2X" },
+          { "label": "Main camera", "value": "200MP" },
+          { "label": "Stylus", "value": "Built-in S Pen" }
+        ],
+        "features": [
+          "Built-in S Pen for notes and drawing",
+          "Galaxy AI tools for photos and text",
+          "Pro-grade camera with long-range zoom",
+          "IP68 dust and water resistance"
+        ]
+      },
+      "12": {
+        "specs": [
+          { "label": "Brand", "value": "Lomography" },
+          { "label": "Model", "value": "Lomo MC-A" },
+          { "label": "Type", "value": "35mm film camera" },
+          { "label": "Lens", "value": "32mm f/2.8" },
+          { "label": "Focus", "value": "Zone-based autofocus" }
+        ],
+        "features": [
+          "Zone-based autofocus that really works",
+          "Automatic exposure for easy shooting",
+          "Multiple exposure mode for creative shots",
+          "Rechargeable battery via USB-C"
+        ]
+      },
+      "13": {
+        "specs": [
+          { "label": "Brand", "value": "DJI" },
+          { "label": "Model", "value": "DJI Mini 4K" },
+          { "label": "Video", "value": "4K Ultra HD" },
+          { "label": "Weight", "value": "Under 249 g" },
+          { "label": "Flight time", "value": "Up to 31 minutes" }
+        ],
+        "features": [
+          "3-axis gimbal for smooth, stable footage",
+          "Up to 10 km HD video transmission",
+          "One-tap QuickShots for cinematic clips",
+          "Combo with a shoulder bag and two spare batteries"
+        ]
+      },
+      "15": {
+        "specs": [
+          { "label": "Brand", "value": "Kodak" },
+          { "label": "Model", "value": "PIXPRO bridge camera" },
+          { "label": "Type", "value": "Bridge digital camera" },
+          { "label": "Optical zoom", "value": "65x" },
+          { "label": "Stabilization", "value": "Optical image stabilization" }
+        ],
+        "features": [
+          "Powerful 65x optical zoom",
+          "Optical stabilization for sharp shots",
+          "Full HD video recording",
+          "Simple automatic shooting modes"
+        ]
+      },
+      "17": {
+        "specs": [
+          { "label": "Brand", "value": "Amazon" },
+          { "label": "Model", "value": "Fire TV Omni QLED (2025)" },
+          { "label": "Resolution", "value": "4K Ultra HD" },
+          { "label": "Panel", "value": "QLED with local dimming" },
+          { "label": "HDR", "value": "Dolby Vision, HDR10+" }
+        ],
+        "features": [
+          "Hands-free Alexa built in",
+          "Ambient Experience turns the screen into wall art",
+          "Thousands of streaming apps with Fire TV",
+          "Rich, vivid colors with QLED"
+        ]
+      },
+      "18": {
+        "specs": [
+          { "label": "Type", "value": "Over-ear wireless headphones" },
+          { "label": "Connectivity", "value": "Bluetooth" },
+          { "label": "Ear pads", "value": "Cushioned, non-removable" },
+          { "label": "In the box", "value": "Headphones only (no charging cable)" }
+        ],
+        "features": [
+          "Lightweight everyday design",
+          "Soft, cushioned ear pads",
+          "Clear, balanced sound",
+          "Great value for the price"
+        ]
+      },
+      "19": {
+        "specs": [
+          { "label": "Brand", "value": "Sony" },
+          { "label": "Model", "value": "WH-1000XM6" },
+          { "label": "Type", "value": "Over-ear wireless headphones" },
+          { "label": "Noise cancelling", "value": "Active noise cancelling (ANC)" },
+          { "label": "Battery", "value": "Up to 30 hours with ANC on" }
+        ],
+        "features": [
+          "Industry-leading noise cancelling",
+          "Foldable design with carrying case",
+          "LDAC high-resolution wireless audio",
+          "Clear calls with multiple microphones"
+        ]
+      },
+      "20": {
+        "specs": [
+          { "label": "Brand", "value": "OneOdio" },
+          { "label": "Model", "value": "Focus A6" },
+          { "label": "Type", "value": "Over-ear wireless headphones" },
+          { "label": "Connectivity", "value": "Bluetooth" },
+          { "label": "App", "value": "OneOdio companion app" }
+        ],
+        "features": [
+          "Loud, bass-rich sound",
+          "Attractive, comfortable design",
+          "App support with custom EQ",
+          "Excellent value for money"
+        ]
+      },
+      "21": {
+        "specs": [
+          { "label": "Brand", "value": "Samsung" },
+          { "label": "Model", "value": "Galaxy Buds 4" },
+          { "label": "Type", "value": "True wireless earbuds" },
+          { "label": "Noise cancelling", "value": "Active noise cancelling (ANC)" },
+          { "label": "Case", "value": "Compact charging case" }
+        ],
+        "features": [
+          "Good, detailed sound",
+          "Sleek, modern look",
+          "Easy touch controls",
+          "Quick pairing with Galaxy devices"
+        ]
+      },
+      "22": {
+        "specs": [
+          { "label": "Brand", "value": "Lenovo" },
+          { "label": "Model", "value": "Yoga AIO 27" },
+          { "label": "Type", "value": "All-in-one PC" },
+          { "label": "Display", "value": "27-inch" },
+          { "label": "Memory & storage", "value": "Soldered RAM (not upgradeable)" }
+        ],
+        "features": [
+          "Large, sharp 27-inch display",
+          "Clean all-in-one design with fewer cables",
+          "Built-in speakers and webcam",
+          "Strong everyday performance"
+        ]
+      },
+      "23": {
+        "description": "A great-value desktop PC picked from our Cyber Monday deals. It handles work, study, browsing and entertainment with ease, and leaves plenty of room for upgrades later on.",
+        "specs": [
+          { "label": "Type", "value": "Desktop tower PC" },
+          { "label": "Best for", "value": "Home, study and office" },
+          { "label": "Storage", "value": "SSD" },
+          { "label": "Operating system", "value": "Windows 11" }
+        ],
+        "features": [
+          "Fast SSD for quick start-up",
+          "Windows 11 ready out of the box",
+          "Plenty of USB ports for accessories",
+          "Easy to upgrade later"
+        ]
+      },
+      "24": {
+        "specs": [
+          { "label": "Brand", "value": "Apple" },
+          { "label": "Model", "value": "Mac mini (M4)" },
+          { "label": "Processor", "value": "Apple M4, 10-core CPU" },
+          { "label": "Memory & storage", "value": "16GB unified memory, 256GB SSD" },
+          { "label": "Size", "value": "5 x 5 inches" }
+        ],
+        "features": [
+          "Tiny, quiet design",
+          "Front USB-C and headphone ports",
+          "Supports up to three displays",
+          "Works with fun retro Macintosh-style covers"
+        ]
+      },
+      "25": {
+        "specs": [
+          { "label": "Model", "value": "InkPad One" },
+          { "label": "Type", "value": "E-reader" },
+          { "label": "Display", "value": "Glare-free E Ink" },
+          { "label": "Best for", "value": "Reading eBooks" }
+        ],
+        "features": [
+          "Paper-like screen that is easy on the eyes",
+          "Weeks of battery life on one charge",
+          "Light and comfortable to hold",
+          "A fresh alternative to Kindle and Kobo"
+        ]
+      },
+      "26": {
+        "specs": [
+          { "label": "Brand", "value": "Onyx Boox" },
+          { "label": "Model", "value": "Go 7" },
+          { "label": "Display", "value": "7-inch E Ink Carta 1200" },
+          { "label": "Operating system", "value": "Android" },
+          { "label": "Buttons", "value": "Physical page-turn buttons" }
+        ],
+        "features": [
+          "Snappy, responsive performance",
+          "Light and compact body",
+          "Install reading apps from Google Play",
+          "Comfortable one-handed reading"
+        ]
+      },
+      "27": {
+        "specs": [
+          { "label": "Brand", "value": "Amazon" },
+          { "label": "Model", "value": "Kindle Scribe Colorsoft" },
+          { "label": "Display", "value": "Colorsoft color E Ink" },
+          { "label": "Stylus", "value": "Premium Pen included" },
+          { "label": "Best for", "value": "Reading and handwritten notes" }
+        ],
+        "features": [
+          "Read and write in color",
+          "Natural, paper-like writing feel",
+          "Highlight your books in color",
+          "Long battery life"
+        ]
+      },
+      "28": {
+        "specs": [
+          { "label": "Brand", "value": "Onyx Boox" },
+          { "label": "Model", "value": "Go Color 7 Gen II" },
+          { "label": "Display", "value": "7-inch Kaleido 3 color E Ink" },
+          { "label": "Operating system", "value": "Android" },
+          { "label": "Stylus", "value": "Supports pen writing" }
+        ],
+        "features": [
+          "Redesigned, more ergonomic page-turn buttons",
+          "Write and take notes with a stylus",
+          "Color screen for comics and magazines",
+          "Same price as the first generation"
+        ]
+      },
+      "30": {
+        "specs": [
+          { "label": "Brand", "value": "HORI" },
+          { "label": "Compatibility", "value": "Nintendo Switch 2" },
+          { "label": "Resolution", "value": "480p" },
+          { "label": "Connection", "value": "USB" },
+          { "label": "Play modes", "value": "Handheld and TV mode" }
+        ],
+        "features": [
+          "Flexible, adjustable design",
+          "Works in handheld and TV mode",
+          "Plug and play, no setup needed",
+          "Officially licensed by Nintendo"
+        ]
+      },
+      "31": {
+        "specs": [
+          { "label": "Brand", "value": "PowerA" },
+          { "label": "Model", "value": "Advantage Wireless Controller" },
+          { "label": "Compatibility", "value": "Nintendo Switch 2" },
+          { "label": "Connectivity", "value": "Wireless" },
+          { "label": "License", "value": "Officially licensed by Nintendo" }
+        ],
+        "features": [
+          "Comfortable full-size grip",
+          "Wireless freedom",
+          "An alternative to the Pro Controller",
+          "Officially licensed accessory"
+        ]
+      },
+      "33": {
+        "specs": [
+          { "label": "Brand", "value": "ASUS ROG" },
+          { "label": "Model", "value": "Raikiri II Xbox Wireless" },
+          { "label": "Compatibility", "value": "Xbox and PC" },
+          { "label": "Polling rate", "value": "1000Hz" },
+          { "label": "Input latency", "value": "3.5ms" }
+        ],
+        "features": [
+          "Lightning-fast response",
+          "Precise TMR thumbsticks and triggers",
+          "Wireless and wired play",
+          "Comfortable, premium build"
+        ]
+      },
+      "35": {
+        "specs": [
+          { "label": "Brand", "value": "Razer" },
+          { "label": "Model", "value": "Enki Pro" },
+          { "label": "Type", "value": "Gaming chair" },
+          { "label": "Upholstery", "value": "Alcantara" },
+          { "label": "Lumbar support", "value": "Built-in lumbar arch" }
+        ],
+        "features": [
+          "All-day comfort for long sessions",
+          "Built-in lumbar support",
+          "Adjustable armrests",
+          "Reclining backrest"
+        ]
+      },
+      "36": {
+        "specs": [
+          { "label": "Brand", "value": "DXRacer" },
+          { "label": "Model", "value": "Martian Pro" },
+          { "label": "Type", "value": "Gaming chair" },
+          { "label": "Heating", "value": "Heated seat" },
+          { "label": "Massage", "value": "Built-in back massager" }
+        ],
+        "features": [
+          "Heated seat for extra comfort",
+          "Back massager to help you relax",
+          "Adjustable armrests",
+          "Reclining backrest"
+        ]
+      },
+      "37": {
+        "specs": [
+          { "label": "Brand", "value": "Garmin" },
+          { "label": "Model", "value": "CIRQA" },
+          { "label": "Type", "value": "Screenless smart band" },
+          { "label": "Tracking", "value": "Heart rate, sleep and recovery" },
+          { "label": "Display", "value": "None, distraction-free" }
+        ],
+        "features": [
+          "Performance tracking without distractions",
+          "24/7 health monitoring",
+          "Syncs with the Garmin Connect app",
+          "Light and comfortable to wear"
+        ]
+      },
+      "38": {
+        "specs": [
+          { "label": "Brand", "value": "Casio" },
+          { "label": "Line", "value": "G-Shock" },
+          { "label": "Type", "value": "Sports watch" },
+          { "label": "Shock resistance", "value": "Shock-resistant" },
+          { "label": "Water resistance", "value": "200 m" }
+        ],
+        "features": [
+          "Tough, shock-resistant build",
+          "200 m water resistance",
+          "LED backlight",
+          "Iconic G-Shock design"
+        ]
+      },
+      "39": {
+        "description": "The Samsung Galaxy Watch Ultra 2 is a rugged premium smartwatch built for adventure. It combines a tough design with advanced health tracking, built-in GPS and long battery life, so you can train, explore and stay connected anywhere.",
+        "specs": [
+          { "label": "Brand", "value": "Samsung" },
+          { "label": "Model", "value": "Galaxy Watch Ultra 2" },
+          { "label": "Type", "value": "Rugged smartwatch" },
+          { "label": "Operating system", "value": "Wear OS" },
+          { "label": "Navigation", "value": "Built-in GPS" }
+        ],
+        "features": [
+          "Rugged design for outdoor adventure",
+          "Advanced health and fitness tracking",
+          "Built-in GPS",
+          "Long battery life"
+        ]
+      },
+      "40": {
+        "specs": [
+          { "label": "Brand", "value": "Amazfit" },
+          { "label": "Model", "value": "T-Rex 3 Pro" },
+          { "label": "Display", "value": "AMOLED" },
+          { "label": "Navigation", "value": "GPS with offline maps" },
+          { "label": "Build", "value": "Rugged, military-grade durability" }
+        ],
+        "features": [
+          "Supreme durability",
+          "Outstanding battery life",
+          "Bright, sharp screen",
+          "Excellent GPS and mapping"
+        ]
+      },
+      "63": {
+        "description": "A powerful smartphone with a large, vivid display, a capable camera system and all-day battery life. It is fast enough for gaming and multitasking, and stylish enough to carry everywhere.",
+        "specs": [
+          { "label": "Type", "value": "Smartphone" },
+          { "label": "Display", "value": "Large, vivid touchscreen" },
+          { "label": "Main camera", "value": "Multi-lens rear camera" },
+          { "label": "Battery", "value": "All-day battery" }
+        ],
+        "features": [
+          "Smooth, fast performance",
+          "Vivid display for videos and games",
+          "Great photos day and night",
+          "Stylish, modern design"
+        ]
+      },
+      "86": {
+        "description": "A comfortable, reliable keyboard for work and gaming. Responsive keys and a full-size layout make typing easy, while the sturdy build is made to last.",
+        "specs": [
+          { "label": "Type", "value": "Keyboard" },
+          { "label": "Layout", "value": "Full-size" },
+          { "label": "Connection", "value": "USB" },
+          { "label": "Best for", "value": "Work and gaming" }
+        ],
+        "features": [
+          "Responsive, comfortable keys",
+          "Full-size layout with number pad",
+          "Plug and play",
+          "Durable build"
+        ]
+      },
+      "92": {
+        "description": "The ASUS ROG Strix is a gaming laptop built for speed. A high-refresh-rate display, powerful NVIDIA GeForce RTX graphics and an efficient cooling system keep your games smooth through long sessions.",
+        "specs": [
+          { "label": "Brand", "value": "ASUS" },
+          { "label": "Series", "value": "ROG Strix" },
+          { "label": "Type", "value": "Gaming laptop" },
+          { "label": "Graphics", "value": "NVIDIA GeForce RTX" },
+          { "label": "Display", "value": "High refresh rate" }
+        ],
+        "features": [
+          "Smooth, high-refresh-rate gaming",
+          "Powerful RTX graphics",
+          "Advanced cooling system",
+          "Customizable RGB lighting"
+        ]
+      }
+    },
     "tabPlaceholders": {
       "reviews": "No reviews yet.",
       "shipping": "Shipping details are not available yet.",
@@ -471,6 +923,7 @@
     "title": "My cart ({{count}})",
     "mobileTitle": "Shopping cart",
     "loadError": "Couldn't load your cart. Please try again.",
+    "updateError": "Couldn't update your cart. Please try again.",
     "items": [
       {
         "title": "T-shirts with multiple colors, for men and lady",
@@ -517,10 +970,6 @@
   },
   "cart": {
     "title": "Your Shopping Bag",
-    "itemDescription": "Special GoPro cameras",
-    "itemBread": "Backed Bread",
-    "itemWipe": "Greeze Face Wipe",
-    "itemGoPro": "GoPro Cameras",
     "subtotal": "SubTotal :",
     "checkout": "Checkout",
     "close": "Close"
