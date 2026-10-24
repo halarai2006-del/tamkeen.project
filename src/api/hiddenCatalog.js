@@ -1,16 +1,18 @@
 const HIDDEN_CATEGORIES = {
   chromebooks: [8],
+  desktopComputer: [13],
   forth: [22],
   electronics: [56, 64],
   animal: [65],
   testSh: [71],
+  mobile: [81],
+  camera: [82, 83],
 }
 
 const HIDDEN_PRODUCTS_BY_CATEGORY = {
   macBook: [167, 214, 216, 223],
   tv: [42, 166, 215, 218, 219, 221, 222],
-  headphones: [156, 171, 173, 175],
-  desktopComputer: [135, 136, 137, 138, 139, 140, 141, 142, 143],
+  headphones: [156, 171, 173, 175, 238],
   windowsPcs: [180],
   macPc: [129, 179],
   tablets: [29, 154, 168, 212],

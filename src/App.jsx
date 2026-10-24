@@ -36,9 +36,7 @@ function AppRoutes() {
             onProfileClick={() => navigate('/account')}
             onCartClick={() => navigate('/cart')}
             onOrdersClick={() => navigate('/orders')}
-            onCategoryClick={(categoryIds) =>
-              navigate(categoryIds?.length ? `/category?category=${categoryIds.join(',')}` : '/category')
-            }
+            onCategoryClick={() => navigate('/category')}
             onProductClick={(id) => navigate(`/product/${id}`)}
           />
         }
@@ -51,7 +49,6 @@ function AppRoutes() {
             onProfileClick={() => navigate('/account')}
             onCartClick={() => navigate('/cart')}
             onOrdersClick={() => navigate('/orders')}
-            onProductClick={(id) => navigate(`/product/${id}`)}
           />
         }
       />
