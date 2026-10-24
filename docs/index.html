@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Borcelle Online Store</title>
+<meta name="description" content="An electronics store in English and Arabic, built with React during the Tamkeen training program.">
+<meta property="og:title" content="Borcelle Online Store">
+<meta property="og:description" content="An electronics store in English and Arabic, built with React during the Tamkeen training program.">
+<meta property="og:image" content="https://halarai2006-del.github.io/tamkeen.project/screenshots/home.png">
+<meta property="og:url" content="https://halarai2006-del.github.io/tamkeen.project/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alexandria:wght@500;700;800&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap">
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+
+  /* Layout: the project presented as its own product listing — screenshot and receipt-style spec up top, then journey, gallery, internals, build log. */
+  :root {
+    --paper: #fbf9f9;
+    --surface: #ffffff;
+    --ink: #1e1a1c;
+    --muted: #6b6366;
+    --line: #e8e2e3;
+    --red: #e63946;
+    --red-ink: #c62834;
+    --red-soft: #fdebed;
+    --font-display: "Alexandria", "IBM Plex Sans Arabic", system-ui, sans-serif;
+    --font-body: "IBM Plex Sans Arabic", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "IBM Plex Mono", "IBM Plex Sans Arabic", ui-monospace, Consolas, monospace;
+    --step--1: 0.8125rem;
+    --step-0: 1rem;
+    --step-1: 1.25rem;
+    --step-2: 1.75rem;
+    --step-3: clamp(2.25rem, 1.6rem + 3vw, 3.75rem);
+    --radius: 10px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #131113;
+      --surface: #1c191b;
+      --ink: #f3eff0;
+      --muted: #a69ea1;
+      --line: #2d292b;
+      --red: #ff5865;
+      --red-ink: #ff7a84;
+      --red-soft: #3a1b1f;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #131113;
+    --surface: #1c191b;
+    --ink: #f3eff0;
+    --muted: #a69ea1;
+    --line: #2d292b;
+    --red: #ff5865;
+    --red-ink: #ff7a84;
+    --red-soft: #3a1b1f;
+    color-scheme: dark;
+  }
+
+  html[lang="ar"] .en, html:not([lang="ar"]) .ar { display: none !important; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: var(--step-0);
+    line-height: 1.6;
+  }
+  .wrap {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  h1, h2, h3 { font-family: var(--font-display); line-height: 1.15; margin: 0; text-wrap: balance; }
+  h2 { font-size: var(--step-2); font-weight: 700; }
+  h3 { font-size: var(--step-0); font-weight: 700; }
+  p { margin: 0; }
+  a { color: var(--red-ink); }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; border-radius: 4px; }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--red-ink);
+  }
+  html[lang="ar"] .eyebrow { letter-spacing: 0; font-family: var(--font-body); font-weight: 600; }
+
+  /* Top bar */
+  .topbar { border-bottom: 1px solid var(--line); background: var(--surface); }
+  .topbar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 14px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 700; }
+  .brand-mark {
+    width: 28px; height: 28px; border-radius: 7px;
+    background: var(--red); color: #fff;
+    display: grid; place-items: center; font-size: 15px; font-weight: 800;
+  }
+  .top-actions { display: flex; align-items: center; gap: 10px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    font: 600 var(--step--1) var(--font-body);
+    padding: 8px 14px; border-radius: 8px;
+    border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+    text-decoration: none; cursor: pointer;
+  }
+  .btn:hover { border-color: var(--ink); }
+  .btn-red { background: var(--red); border-color: var(--red); color: #fff; }
+  .btn-red:hover { background: var(--red-ink); border-color: var(--red-ink); }
+
+  /* Hero */
+  .hero .wrap { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 40px; padding-block: 56px 48px; align-items: start; }
+  .hero-text { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+  .hero h1 { font-size: var(--step-3); font-weight: 800; letter-spacing: -0.02em; }
+  html[lang="ar"] .hero h1 { letter-spacing: 0; line-height: 1.3; }
+  .hero h1 em { font-style: normal; color: var(--red); }
+  .lede { font-size: var(--step-1); color: var(--muted); max-width: 34em; line-height: 1.55; }
+  .hero-ctas { display: flex; flex-wrap: wrap; gap: 10px; }
+  .browser {
+    grid-column: 1 / -1;
+    min-width: 0;
+    border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden;
+    background: var(--surface);
+    box-shadow: 0 24px 60px -30px rgba(40, 10, 15, 0.35);
+  }
+  .browser-bar {
+    display: flex; align-items: center; gap: 12px;
+    padding: 9px 12px; border-bottom: 1px solid var(--line);
+    font-family: var(--font-mono); font-size: 12px; color: var(--muted);
+  }
+  .dots { display: flex; gap: 6px; }
+  .dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--line); }
+  .url { flex: 1; min-width: 0; padding: 3px 10px; border-radius: 6px; background: var(--paper); direction: ltr; text-align: start; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .browser img { display: block; width: 100%; height: auto; }
+
+  /* Receipt */
+  .receipt {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-bottom: none;
+    padding: 24px 22px 30px;
+    font-family: var(--font-mono);
+    font-size: 13.5px;
+    line-height: 1.5;
+    font-variant-numeric: tabular-nums;
+  }
+  .receipt::after {
+    content: ""; position: absolute; left: -1px; right: -1px; bottom: -10px; height: 10px;
+    background:
+      linear-gradient(-45deg, transparent 7px, var(--surface) 0) 0 0 / 14px 10px repeat-x,
+      linear-gradient(45deg, transparent 7px, var(--surface) 0) 0 0 / 14px 10px repeat-x;
+  }
+  .receipt-head { text-align: center; display: flex; flex-direction: column; gap: 2px; padding-bottom: 14px; border-bottom: 1px dashed var(--muted); }
+  .receipt-head strong { font-family: var(--font-display); font-size: 1.1rem; letter-spacing: 0.06em; }
+  html[lang="ar"] .receipt-head strong { letter-spacing: 0; }
+  .receipt-head span { color: var(--muted); font-size: 12px; }
+  .receipt dl { margin: 14px 0; display: flex; flex-direction: column; gap: 7px; }
+  .line { display: flex; align-items: baseline; gap: 6px; }
+  .line dt { white-space: nowrap; }
+  .line .fill { flex: 1; min-width: 12px; border-bottom: 1px dotted var(--muted); transform: translateY(-4px); }
+  .line dd { margin: 0; text-align: end; font-weight: 600; white-space: nowrap; }
+  .receipt-total { border-top: 1px dashed var(--muted); padding-top: 12px; display: flex; justify-content: space-between; gap: 10px; font-weight: 600; }
+  .receipt-total b { color: var(--red-ink); }
+  .barcode { margin-top: 16px; height: 34px; background: repeating-linear-gradient(90deg, var(--ink) 0 2px, transparent 2px 4px, var(--ink) 4px 5px, transparent 5px 8px, var(--ink) 8px 11px, transparent 11px 12px); opacity: 0.85; }
+  .barcode-num { text-align: center; font-size: 11px; color: var(--muted); letter-spacing: 0.3em; margin-top: 4px; direction: ltr; }
+
+  /* Sections */
+  section.block { padding-block: 56px; border-top: 1px solid var(--line); }
+  .block-head { display: flex; flex-direction: column; gap: 8px; margin-bottom: 28px; max-width: 40em; }
+  .block-head p { color: var(--muted); }
+
+  /* Journey */
+  .journey { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0; counter-reset: step; }
+  .journey li { position: relative; padding: 18px 16px 0 0; border-top: 2px solid var(--line); display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  html[lang="ar"] .journey li { padding: 18px 0 0 16px; }
+  .journey li::before {
+    counter-increment: step; content: counter(step);
+    position: absolute; top: -13px; inset-inline-start: 0;
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--paper); border: 2px solid var(--red); color: var(--red-ink);
+    font: 600 12px/20px var(--font-mono); text-align: center;
+  }
+  .journey li:first-child { border-top-color: var(--red); }
+  .journey p { font-size: var(--step--1); color: var(--muted); }
+  .journey code { font-family: var(--font-mono); font-size: 12px; color: var(--ink); background: var(--red-soft); padding: 1px 5px; border-radius: 4px; }
+
+  /* Gallery */
+  .gallery { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 20px; }
+  .gallery-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; margin-top: 20px; }
+  figure { margin: 0; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+  figure img {
+    display: block; width: 100%; height: auto;
+    border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  figure img:hover { transform: translateY(-3px); box-shadow: 0 18px 40px -24px rgba(40, 10, 15, 0.45); }
+  figcaption { font-size: var(--step--1); color: var(--muted); }
+  figcaption b { color: var(--ink); font-weight: 600; }
+  .phone { grid-row: span 2; align-items: center; }
+  .phone img { max-width: 300px; border-radius: 28px; border-width: 6px; border-color: var(--ink); }
+  .phone figcaption { text-align: center; }
+
+  /* Internals */
+  .internals { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  .internal { background: var(--surface); padding: 22px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .internal .tag { font-family: var(--font-mono); font-size: 12px; color: var(--red-ink); direction: ltr; text-align: start; }
+  html[lang="ar"] .internal .tag { text-align: right; }
+  .internal p { color: var(--muted); font-size: 0.94rem; }
+
+  /* Build log */
+  .log { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+  .log li { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 20px; padding-block: 14px; border-bottom: 1px solid var(--line); }
+  .log li:last-child { border-bottom: none; }
+  .log time { font-family: var(--font-mono); font-size: var(--step--1); color: var(--red-ink); font-variant-numeric: tabular-nums; padding-top: 2px; }
+  .log p { color: var(--muted); font-size: 0.94rem; }
+
+  /* Stack */
+  .stack { display: flex; flex-wrap: wrap; gap: 10px; list-style: none; margin: 0; padding: 0; }
+  .stack li { font-family: var(--font-mono); font-size: var(--step--1); padding: 7px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); direction: ltr; }
+
+  footer { border-top: 1px solid var(--line); background: var(--surface); }
+  footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; color: var(--muted); font-size: var(--step--1); }
+
+  @media (max-width: 900px) {
+    .hero .wrap { grid-template-columns: minmax(0, 1fr); }
+    .receipt { max-width: 380px; }
+    .journey { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 32px; }
+    .internals { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 640px) {
+    .hero .wrap { padding-block: 36px 40px; }
+    section.block { padding-block: 40px; }
+    .journey { grid-template-columns: minmax(0, 1fr); row-gap: 0; }
+    .journey li, html[lang="ar"] .journey li { border-top: none; border-inline-start: 2px solid var(--line); padding: 0 0 22px 0; padding-inline-start: 24px; }
+    .journey li:first-child { border-inline-start-color: var(--red); }
+    .journey li::before { top: 0; inset-inline-start: -13px; }
+    .gallery, .gallery-pair, .internals { grid-template-columns: minmax(0, 1fr); }
+    .phone { grid-row: auto; }
+    .phone img { max-width: 240px; }
+    .log li { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+    .top-actions .btn-github .label { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    figure img { transition: none; }
+    figure img:hover { transform: none; }
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand"><span class="brand-mark" aria-hidden="true">B</span><span>Borcelle</span></div>
+    <div class="top-actions">
+      <button type="button" class="btn" id="lang-toggle" aria-label="Switch language">
+        <span class="en">العربية</span><span class="ar">English</span>
+      </button>
+      <a class="btn btn-github" href="https://github.com/halarai2006-del/tamkeen.project" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        <span class="label">GitHub</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-text">
+        <span class="eyebrow"><span class="en">Front-end project · Tamkeen training</span><span class="ar">مشروع واجهة أمامية · تدريب تمكين</span></span>
+        <h1>
+          <span class="en">An electronics store that speaks <em>two languages</em></span>
+          <span class="ar">متجر إلكترونيات يتحدث <em>لغتين</em></span>
+        </h1>
+        <p class="lede">
+          <span class="en">Borcelle is a full storefront built with React: browse products, fill a cart, log in with a phone code, and pay. Every product, cart and order comes from a live API.</span>
+          <span class="ar">بورسيل متجر إلكتروني كامل مبني بمكتبة React: تتصفح المنتجات، تملأ السلة، تسجّل الدخول برمز يصل إلى هاتفك، ثم تدفع. كل المنتجات والسلال والطلبات تأتي من خادم حقيقي.</span>
+        </p>
+        <div class="hero-ctas">
+          <a class="btn btn-red" href="https://github.com/halarai2006-del/tamkeen.project" target="_blank" rel="noopener">
+            <span class="en">View the code</span><span class="ar">شاهد الكود</span>
+          </a>
+          <a class="btn" href="#gallery"><span class="en">See the screens</span><span class="ar">شاهد الشاشات</span></a>
+        </div>
+      </div>
+
+      <aside class="receipt" aria-label="Project summary">
+        <div class="receipt-head">
+          <strong>BORCELLE</strong>
+          <span class="en">Order summary · project spec</span>
+          <span class="ar">ملخص الطلب · مواصفات المشروع</span>
+        </div>
+        <dl>
+          <div class="line"><dt><span class="en">Screens</span><span class="ar">الشاشات</span></dt><span class="fill"></span><dd>12</dd></div>
+          <div class="line"><dt><span class="en">Languages</span><span class="ar">اللغات</span></dt><span class="fill"></span><dd>EN · AR</dd></div>
+          <div class="line"><dt><span class="en">Themes</span><span class="ar">المظهر</span></dt><span class="fill"></span><dd><span class="en">Light · Dark</span><span class="ar">فاتح · داكن</span></dd></div>
+          <div class="line"><dt><span class="en">Payment methods</span><span class="ar">طرق الدفع</span></dt><span class="fill"></span><dd>3</dd></div>
+          <div class="line"><dt><span class="en">Lines of code</span><span class="ar">أسطر الكود</span></dt><span class="fill"></span><dd>4,200+</dd></div>
+          <div class="line"><dt><span class="en">Saved versions</span><span class="ar">نسخ محفوظة</span></dt><span class="fill"></span><dd>9</dd></div>
+          <div class="line"><dt><span class="en">Built</span><span class="ar">مدة البناء</span></dt><span class="fill"></span><dd><span class="en">Sep 21 – Oct 24</span><span class="ar">٢١ أيلول – ٢٤ تشرين الأول</span></dd></div>
+        </dl>
+        <div class="receipt-total">
+          <span><span class="en">TOTAL</span><span class="ar">المجموع</span></span>
+          <b><span class="en">1 working store</span><span class="ar">متجر واحد يعمل</span></b>
+        </div>
+        <div class="barcode" aria-hidden="true"></div>
+        <div class="barcode-num" aria-hidden="true">20260921 · 20261024</div>
+      </aside>
+
+      <div class="browser">
+        <div class="browser-bar">
+          <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="url">localhost:5173</span>
+        </div>
+        <img class="en" src="screenshots/home.png" alt="Borcelle home page in English, with the category list, hero banner and deals" width="1440" height="900">
+        <img class="ar" src="screenshots/home-arabic.png" alt="الصفحة الرئيسية لمتجر بورسيل باللغة العربية" width="1440" height="900">
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="journey">
+    <div class="wrap">
+      <div class="block-head">
+        <span class="eyebrow"><span class="en">The shopper's path</span><span class="ar">رحلة المتسوق</span></span>
+        <h2><span class="en">From the first click to a placed order</span><span class="ar">من أول نقرة حتى تأكيد الطلب</span></h2>
+      </div>
+      <ol class="journey">
+        <li>
+          <h3><span class="en">Browse</span><span class="ar">التصفح</span></h3>
+          <p><span class="en">Categories, deals and products load from the API on the home page.</span><span class="ar">الأقسام والعروض والمنتجات تُحمَّل من الخادم في الصفحة الرئيسية.</span></p>
+        </li>
+        <li>
+          <h3><span class="en">Product page</span><span class="ar">صفحة المنتج</span></h3>
+          <p><span class="en">Photos, price, a specs table and a feature list in both languages.</span><span class="ar">الصور والسعر وجدول المواصفات وقائمة الميزات باللغتين.</span></p>
+        </li>
+        <li>
+          <h3><span class="en">Cart</span><span class="ar">السلة</span></h3>
+          <p><span class="en">A guest cart that works without an account, plus a quick bag in the navbar.</span><span class="ar">سلة للزائر تعمل بدون حساب، مع حقيبة سريعة في الشريط العلوي.</span></p>
+        </li>
+        <li>
+          <h3><span class="en">Phone login</span><span class="ar">الدخول بالهاتف</span></h3>
+          <p><span class="en">Enter a number, then the one-time code. New numbers are registered on the spot.</span><span class="ar">أدخل رقمك ثم الرمز المؤقت. الرقم الجديد يُسجَّل تلقائياً.</span></p>
+        </li>
+        <li>
+          <h3><span class="en">Address &amp; pay</span><span class="ar">العنوان والدفع</span></h3>
+          <p><span class="en">Save an address and pay by cash, Syriatel or MTN.</span><span class="ar">احفظ عنوانك وادفع نقداً أو عبر سيرياتيل أو إم تي إن.</span></p>
+        </li>
+        <li>
+          <h3><span class="en">Orders</span><span class="ar">الطلبات</span></h3>
+          <p><span class="en">Every placed order appears in the order history.</span><span class="ar">كل طلب يظهر في سجل الطلبات.</span></p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="block" id="gallery">
+    <div class="wrap">
+      <div class="block-head">
+        <span class="eyebrow"><span class="en">Screens</span><span class="ar">الشاشات</span></span>
+        <h2><span class="en">What it looks like</span><span class="ar">شكل المتجر</span></h2>
+        <p><span class="en">Captured from the running store with live data.</span><span class="ar">لقطات من المتجر وهو يعمل ببيانات حقيقية.</span></p>
+      </div>
+      <div class="gallery">
+        <figure>
+          <img src="screenshots/product.png" alt="Product page for a MacBook with price, add to cart, and a specs table" width="1440" height="900" loading="lazy">
+          <figcaption><b><span class="en">Product page.</span><span class="ar">صفحة المنتج.</span></b> <span class="en">Specs and features are written for each product in English and Arabic.</span><span class="ar">المواصفات والميزات مكتوبة لكل منتج بالعربية والإنجليزية.</span></figcaption>
+        </figure>
+        <figure class="phone">
+          <img src="screenshots/mobile.png" alt="Home page on a phone screen" width="780" height="1688" loading="lazy">
+          <figcaption><b><span class="en">On a phone.</span><span class="ar">على الهاتف.</span></b> <span class="en">The layout adapts down to small screens.</span><span class="ar">التصميم يتكيّف مع الشاشات الصغيرة.</span></figcaption>
+        </figure>
+        <figure>
+          <img src="screenshots/cart.png" alt="Cart with two items, quantities, a coupon field and an order total" width="1440" height="900" loading="lazy">
+          <figcaption><b><span class="en">Cart.</span><span class="ar">السلة.</span></b> <span class="en">Quantities update in place, with a running total.</span><span class="ar">تتغير الكميات مباشرة ويتحدث المجموع معها.</span></figcaption>
+        </figure>
+      </div>
+      <div class="gallery-pair">
+        <figure>
+          <img src="screenshots/login.png" alt="Login screen asking for a phone number" width="1440" height="900" loading="lazy">
+          <figcaption><b><span class="en">Login.</span><span class="ar">تسجيل الدخول.</span></b> <span class="en">Phone number first, then a one-time code.</span><span class="ar">رقم الهاتف أولاً، ثم رمز مؤقت.</span></figcaption>
+        </figure>
+        <figure>
+          <img class="en" src="screenshots/home-arabic.png" alt="The home page in Arabic, laid out right to left" width="1440" height="900" loading="lazy">
+          <img class="ar" src="screenshots/home.png" alt="الصفحة الرئيسية باللغة الإنجليزية" width="1440" height="900" loading="lazy">
+          <figcaption>
+            <b><span class="en">Right to left.</span><span class="ar">من اليسار لليمين.</span></b>
+            <span class="en">Switching to Arabic flips the whole layout, not just the text.</span>
+            <span class="ar">التبديل إلى الإنجليزية يقلب اتجاه الصفحة كلها، وليس النص فقط.</span>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="internals">
+    <div class="wrap">
+      <div class="block-head">
+        <span class="eyebrow"><span class="en">Under the hood</span><span class="ar">من الداخل</span></span>
+        <h2><span class="en">The parts you don't see</span><span class="ar">الأجزاء التي لا تظهر للمستخدم</span></h2>
+      </div>
+      <div class="internals">
+        <div class="internal">
+          <span class="tag">Accept-Language</span>
+          <h3><span class="en">Live API in the right language</span><span class="ar">خادم حقيقي باللغة المناسبة</span></h3>
+          <p><span class="en">Each request tells the server which language is active, so product and category names come back translated.</span><span class="ar">كل طلب يخبر الخادم باللغة الحالية، فتصل أسماء المنتجات والأقسام مترجمة.</span></p>
+        </div>
+        <div class="internal">
+          <span class="tag">cache · 60s</span>
+          <h3><span class="en">Catalog cache</span><span class="ar">ذاكرة مؤقتة للمنتجات</span></h3>
+          <p><span class="en">The same catalog request within a minute is answered from memory, kept separately for each language.</span><span class="ar">إذا تكرر نفس الطلب خلال دقيقة، يُجاب من الذاكرة، مع نسخة منفصلة لكل لغة.</span></p>
+        </div>
+        <div class="internal">
+          <span class="tag">guest → account</span>
+          <h3><span class="en">Cart that follows you</span><span class="ar">سلة تنتقل معك</span></h3>
+          <p><span class="en">Items added as a guest are moved into your account cart as soon as you log in.</span><span class="ar">المنتجات التي تضيفها كزائر تنتقل إلى سلة حسابك فور تسجيل الدخول.</span></p>
+        </div>
+        <div class="internal">
+          <span class="tag">rollback</span>
+          <h3><span class="en">Safe quantity changes</span><span class="ar">تعديل آمن للكميات</span></h3>
+          <p><span class="en">If the server rejects a quantity change, the cart line goes back to its last good value.</span><span class="ar">إذا رفض الخادم تعديل الكمية، يعود المنتج في السلة إلى قيمته السابقة.</span></p>
+        </div>
+        <div class="internal">
+          <span class="tag">code 11111</span>
+          <h3><span class="en">Demo mode</span><span class="ar">وضع تجريبي</span></h3>
+          <p><span class="en">Reviewers can try checkout without a real SMS. Demo data stays in the browser.</span><span class="ar">يمكن تجربة الشراء بدون رسالة حقيقية، وتبقى البيانات التجريبية في المتصفح.</span></p>
+        </div>
+        <div class="internal">
+          <span class="tag">curated catalog</span>
+          <h3><span class="en">Clean shelves</span><span class="ar">رفوف مرتبة</span></h3>
+          <p><span class="en">Test categories and products on the shared training server are hidden by ID, including direct product links.</span><span class="ar">الأقسام والمنتجات التجريبية على خادم التدريب المشترك مخفية برقمها، حتى عند فتح رابط المنتج مباشرة.</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="log">
+    <div class="wrap">
+      <div class="block-head">
+        <span class="eyebrow"><span class="en">Build log</span><span class="ar">سجل البناء</span></span>
+        <h2><span class="en">Five weeks, step by step</span><span class="ar">خمسة أسابيع، خطوة بخطوة</span></h2>
+      </div>
+      <ol class="log">
+        <li>
+          <time datetime="2026-09-21">2026-09-21</time>
+          <div><h3><span class="en">First version</span><span class="ar">النسخة الأولى</span></h3><p><span class="en">The storefront pages, built with React and Vite.</span><span class="ar">صفحات المتجر، مبنية بمكتبة React وأداة Vite.</span></p></div>
+        </li>
+        <li>
+          <time datetime="2026-09-23">2026-09-23</time>
+          <div><h3><span class="en">Connected to the real backend</span><span class="ar">الربط بالخادم الحقيقي</span></h3><p><span class="en">Live products, cart and checkout, plus the demo login.</span><span class="ar">منتجات وسلة ودفع حقيقي، مع وضع الدخول التجريبي.</span></p></div>
+        </li>
+        <li>
+          <time datetime="2026-09-25">2026-09-25</time>
+          <div><h3><span class="en">Every page on the API</span><span class="ar">كل الصفحات على الخادم</span></h3><p><span class="en">Orders, profile, addresses, settings and contact connected.</span><span class="ar">ربط الطلبات والملف الشخصي والعناوين والإعدادات وصفحة التواصل.</span></p></div>
+        </li>
+        <li>
+          <time datetime="2026-10-18">2026-10-18</time>
+          <div><h3><span class="en">Product specs and shopping bag</span><span class="ar">المواصفات وحقيبة التسوق</span></h3><p><span class="en">Specs for each product, a bag in the navbar, and a cleaned-up catalog.</span><span class="ar">مواصفات لكل منتج، حقيبة في الشريط العلوي، وترتيب قائمة المنتجات.</span></p></div>
+        </li>
+        <li>
+          <time datetime="2026-10-24">2026-10-24</time>
+          <div><h3><span class="en">Polish and documentation</span><span class="ar">اللمسات الأخيرة والتوثيق</span></h3><p><span class="en">A simpler category page, a README and screenshots.</span><span class="ar">تبسيط صفحة الأقسام، وإضافة صفحة الوصف والصور.</span></p></div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="block" id="stack">
+    <div class="wrap">
+      <div class="block-head">
+        <span class="eyebrow"><span class="en">Built with</span><span class="ar">الأدوات</span></span>
+        <h2><span class="en">Tech stack</span><span class="ar">التقنيات المستخدمة</span></h2>
+      </div>
+      <ul class="stack">
+        <li>React 19</li>
+        <li>Vite</li>
+        <li>React Router</li>
+        <li>Bootstrap 5</li>
+        <li>Bootstrap Icons</li>
+        <li>i18next</li>
+        <li>Tamkeen Store API</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span><span class="en">Borcelle Online Store · built during the Tamkeen training program</span><span class="ar">متجر بورسيل · بُني خلال برنامج تدريب تمكين</span></span>
+    <a href="https://github.com/halarai2006-del/tamkeen.project" target="_blank" rel="noopener">github.com/halarai2006-del/tamkeen.project</a>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var toggle = document.getElementById('lang-toggle');
+
+    function apply(lang) {
+      root.lang = lang;
+      root.dir = lang === 'ar' ? 'rtl' : 'ltr';
+      toggle.setAttribute('aria-label', lang === 'ar' ? 'Switch to English' : 'التبديل إلى العربية');
+    }
+
+    var saved = null;
+    try { saved = localStorage.getItem('borcelle-portfolio-lang'); } catch (e) {}
+    var initial = location.hash === '#ar' ? 'ar' : location.hash === '#en' ? 'en' : saved || 'en';
+    apply(initial);
+
+    toggle.addEventListener('click', function () {
+      var next = root.lang === 'ar' ? 'en' : 'ar';
+      apply(next);
+      try { localStorage.setItem('borcelle-portfolio-lang', next); } catch (e) {}
+    });
+  })();
+</script>
+</body>
+</html>
